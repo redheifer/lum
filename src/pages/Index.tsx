@@ -118,13 +118,24 @@ const Index = () => {
                   })}
                 />
               ) : (
-                <ScrollArea className="h-[calc(100vh-220px)]">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pr-4">
-                    {filteredCalls.map(call => (
-                      <CallReviewCard key={call.id} call={call} />
-                    ))}
+                <div className="flex flex-col bg-white rounded-md border shadow-sm overflow-hidden">
+                  {/* List Header */}
+                  <div className="hidden md:flex items-center border-b bg-slate-50 p-3 text-sm font-medium text-slate-500">
+                    <div className="flex-1">Customer / Agent</div>
+                    <div className="flex-1">Tags</div>
+                    <div className="flex-1">Date / Duration</div>
+                    <div className="w-24 text-right">Score</div>
                   </div>
-                </ScrollArea>
+                  
+                  {/* List Body */}
+                  <ScrollArea className="h-[calc(100vh-220px)]">
+                    <div className="pr-4">
+                      {filteredCalls.map(call => (
+                        <CallReviewCard key={call.id} call={call} />
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </div>
               )}
             </div>
           )}
