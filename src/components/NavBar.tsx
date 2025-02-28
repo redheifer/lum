@@ -77,6 +77,12 @@ const NavBar: React.FC = () => {
               </Button>
             </Link>
             <Link to="/dashboard">
+              <Button variant="ghost" className="flex items-center gap-2 text-amber-600 hover:text-amber-700 border border-amber-600 hover:bg-amber-50">
+                <CircleUser className="h-4 w-4" />
+                Developer Login
+              </Button>
+            </Link>
+            <Link to="/dashboard">
               <Button className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white">
                 <UserPlus className="h-4 w-4" />
                 Create Free Account
@@ -113,6 +119,12 @@ const NavBar: React.FC = () => {
               <Button variant="ghost" className="w-full justify-start">
                 <LogIn className="h-4 w-4 mr-2" />
                 Login
+              </Button>
+            </Link>
+            <Link to="/dashboard" onClick={toggleMenu}>
+              <Button variant="ghost" className="w-full justify-start text-amber-600 hover:text-amber-700 border border-amber-600 hover:bg-amber-50">
+                <CircleUser className="h-4 w-4 mr-2" />
+                Developer Login
               </Button>
             </Link>
             <Link to="/dashboard" onClick={toggleMenu}>
