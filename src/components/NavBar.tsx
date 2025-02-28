@@ -76,34 +76,12 @@ const NavBar: React.FC = () => {
                 Login
               </Button>
             </Link>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="flex items-center gap-2">
-                  <UserPlus className="h-4 w-4" />
-                  Sign Up
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuItem>
-                  <Link to="/dashboard" className="flex items-center gap-2 w-full">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" className="h-4 w-4" alt="Google" />
-                    Sign up with Google
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/dashboard" className="flex items-center gap-2 w-full">
-                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoft/microsoft-original.svg" className="h-4 w-4" alt="Microsoft" />
-                    Sign up with Microsoft
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link to="/dashboard" className="flex items-center gap-2 w-full">
-                    <Mail className="h-4 w-4" />
-                    Sign up with Email
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Link to="/dashboard">
+              <Button className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white">
+                <UserPlus className="h-4 w-4" />
+                Create Free Account
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -137,28 +115,12 @@ const NavBar: React.FC = () => {
                 Login
               </Button>
             </Link>
-            <div className="border-t border-gray-200 my-2"></div>
-            <div className="space-y-2">
-              <p className="text-sm font-medium px-2">Sign up with:</p>
-              <Link to="/dashboard" onClick={toggleMenu}>
-                <Button variant="outline" className="w-full justify-start">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" className="h-4 w-4 mr-2" alt="Google" />
-                  Google
-                </Button>
-              </Link>
-              <Link to="/dashboard" onClick={toggleMenu}>
-                <Button variant="outline" className="w-full justify-start">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/microsoft/microsoft-original.svg" className="h-4 w-4 mr-2" alt="Microsoft" />
-                  Microsoft
-                </Button>
-              </Link>
-              <Link to="/dashboard" onClick={toggleMenu}>
-                <Button variant="outline" className="w-full justify-start">
-                  <Mail className="h-4 w-4 mr-2" />
-                  Email
-                </Button>
-              </Link>
-            </div>
+            <Link to="/dashboard" onClick={toggleMenu}>
+              <Button className="w-full justify-start bg-green-600 hover:bg-green-700 text-white">
+                <UserPlus className="h-4 w-4 mr-2" />
+                Create Free Account
+              </Button>
+            </Link>
           </div>
         </div>
       )}
