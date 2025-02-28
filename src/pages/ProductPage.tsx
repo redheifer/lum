@@ -243,12 +243,12 @@ const ProductPage = () => {
             </div>
             
             <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+              <TabsList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 bg-transparent h-auto">
                 {features.map((feature) => (
                   <TabsTrigger
                     key={feature.id}
                     value={feature.id}
-                    className={`h-full p-0 data-[state=active]:bg-transparent data-[state=active]:shadow-none`}
+                    className="p-0 data-[state=active]:bg-transparent data-[state=active]:shadow-none h-full"
                   >
                     <Card 
                       className={`w-full h-full transition-all hover:shadow-lg ${
@@ -272,7 +272,7 @@ const ProductPage = () => {
                     </Card>
                   </TabsTrigger>
                 ))}
-              </div>
+              </TabsList>
               
               <div className="bg-white shadow-lg rounded-xl p-6 mt-4 min-h-[400px] animate-fade-in">
                 {features.map((feature) => (
