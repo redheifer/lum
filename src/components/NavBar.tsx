@@ -70,7 +70,7 @@ const NavBar: React.FC = () => {
               </Button>
             </Link>
             <div className="h-6 border-l border-gray-300 mx-1"></div>
-            <Link to="/dashboard">
+            <Link to="/login">
               <Button variant="ghost" className="flex items-center gap-2">
                 <LogIn className="h-4 w-4" />
                 Login
@@ -109,7 +109,7 @@ const NavBar: React.FC = () => {
               </Button>
             </Link>
             <div className="border-t border-gray-200 my-2"></div>
-            <Link to="/dashboard" onClick={toggleMenu}>
+            <Link to="/login" onClick={toggleMenu}>
               <Button variant="ghost" className="w-full justify-start">
                 <LogIn className="h-4 w-4 mr-2" />
                 Login
