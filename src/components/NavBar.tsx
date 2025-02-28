@@ -1,10 +1,24 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogIn, UserPlus, PresentationIcon, InfoIcon, DollarSign } from "lucide-react";
+import { 
+  LogIn, 
+  UserPlus, 
+  PresentationIcon, 
+  InfoIcon, 
+  DollarSign, 
+  Menu, 
+  X 
+} from "lucide-react";
 
 const NavBar: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-sm z-50 border-b">
       <div className="container mx-auto px-4">
@@ -15,7 +29,20 @@ const NavBar: React.FC = () => {
             </Link>
           </div>
           
-          <div className="flex items-center space-x-4">
+          {/* Hamburger menu button */}
+          <div className="md:hidden">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={toggleMenu}
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            >
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+          </div>
+          
+          {/* Desktop navigation */}
+          <div className="hidden md:flex items-center space-x-4">
             <Link to="/pricing">
               <Button variant="ghost" className="flex items-center gap-2">
                 <DollarSign className="h-4 w-4" />
@@ -50,6 +77,45 @@ const NavBar: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-white border-b shadow-lg">
+          <div className="flex flex-col p-4 space-y-3">
+            <Link to="/pricing" onClick={toggleMenu}>
+              <Button variant="ghost" className="w-full justify-start">
+                <DollarSign className="h-4 w-4 mr-2" />
+                Pricing
+              </Button>
+            </Link>
+            <Link to="/product" onClick={toggleMenu}>
+              <Button variant="ghost" className="w-full justify-start">
+                <InfoIcon className="h-4 w-4 mr-2" />
+                Product
+              </Button>
+            </Link>
+            <Link to="/demo" onClick={toggleMenu}>
+              <Button variant="ghost" className="w-full justify-start">
+                <PresentationIcon className="h-4 w-4 mr-2" />
+                Request Demo
+              </Button>
+            </Link>
+            <div className="border-t border-gray-200 my-2"></div>
+            <Link to="/dashboard" onClick={toggleMenu}>
+              <Button variant="ghost" className="w-full justify-start">
+                <LogIn className="h-4 w-4 mr-2" />
+                Login
+              </Button>
+            </Link>
+            <Link to="/dashboard" onClick={toggleMenu}>
+              <Button className="w-full justify-start">
+                <UserPlus className="h-4 w-4 mr-2" />
+                Sign Up
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
