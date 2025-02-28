@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   CheckCircle2, 
   BarChart2, 
@@ -14,10 +16,13 @@ import {
   Clock, 
   DollarSign, 
   ArrowRight, 
-  Star 
+  Star,
+  ChevronRight,
+  ChevronLeft 
 } from "lucide-react";
 
 const HomePage = () => {
+  const [formStep, setFormStep] = useState(0);
   const [formData, setFormData] = useState({
     agentCount: 10,
     avgSalary: 50000,
@@ -31,12 +36,48 @@ const HomePage = () => {
     savingsPercentage: number;
   }>(null);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const agentCountOptions = [
+    { value: 5, label: "Small Team (5 agents)" },
+    { value: 10, label: "Growing Team (10 agents)" },
+    { value: 25, label: "Medium Team (25 agents)" },
+    { value: 50, label: "Large Team (50 agents)" },
+    { value: 100, label: "Enterprise (100+ agents)" },
+  ];
+
+  const salaryOptions = [
+    { value: 40000, label: "$40,000 - Entry Level" },
+    { value: 50000, label: "$50,000 - Mid Level" },
+    { value: 60000, label: "$60,000 - Senior Level" },
+    { value: 75000, label: "$75,000 - Management" },
+  ];
+
+  const reviewRateOptions = [
+    { value: 10, label: "10% of calls" },
+    { value: 20, label: "20% of calls" },
+    { value: 50, label: "50% of calls" },
+    { value: 100, label: "100% of calls" },
+  ];
+
+  const handleSelectChange = (name: string, value: string) => {
     setFormData({
       ...formData,
-      [name]: parseInt(value) || 0,
+      [name]: parseInt(value),
     });
+  };
+
+  const nextStep = () => {
+    if (formStep < 2) {
+      setFormStep(formStep + 1);
+    } else {
+      calculateROI();
+      setFormStep(3);
+    }
+  };
+
+  const prevStep = () => {
+    if (formStep > 0) {
+      setFormStep(formStep - 1);
+    }
   };
 
   const calculateROI = () => {
@@ -63,6 +104,11 @@ const HomePage = () => {
       savings,
       savingsPercentage
     });
+  };
+
+  const resetCalculator = () => {
+    setFormStep(0);
+    setCalculationResults(null);
   };
 
   const features = [
@@ -109,6 +155,113 @@ const HomePage = () => {
       icon: <TrendingUp />
     }
   ];
+
+  // Step content for the ROI calculator
+  const renderStepContent = () => {
+    switch (formStep) {
+      case 0:
+        return (
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold">How many agents do you have?</h3>
+            <div className="grid gap-4">
+              {agentCountOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => handleSelectChange("agentCount", option.value.toString())}
+                  className={`flex items-center justify-between p-4 border rounded-lg hover:border-primary transition-all ${
+                    formData.agentCount === option.value ? "border-primary bg-primary/5" : "border-gray-200"
+                  }`}
+                >
+                  <span className="font-medium">{option.label}</span>
+                  {formData.agentCount === option.value && (
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      case 1:
+        return (
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold">What's the average QA analyst salary?</h3>
+            <div className="grid gap-4">
+              {salaryOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => handleSelectChange("avgSalary", option.value.toString())}
+                  className={`flex items-center justify-between p-4 border rounded-lg hover:border-primary transition-all ${
+                    formData.avgSalary === option.value ? "border-primary bg-primary/5" : "border-gray-200"
+                  }`}
+                >
+                  <span className="font-medium">{option.label}</span>
+                  {formData.avgSalary === option.value && (
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold">What percentage of calls do you want to review?</h3>
+            <div className="grid gap-4">
+              {reviewRateOptions.map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => handleSelectChange("reviewRate", option.value.toString())}
+                  className={`flex items-center justify-between p-4 border rounded-lg hover:border-primary transition-all ${
+                    formData.reviewRate === option.value ? "border-primary bg-primary/5" : "border-gray-200"
+                  }`}
+                >
+                  <span className="font-medium">{option.label}</span>
+                  {formData.reviewRate === option.value && (
+                    <CheckCircle2 className="h-5 w-5 text-primary" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold text-center">Your Potential Savings</h3>
+            {calculationResults && (
+              <div className="space-y-6">
+                <div className="bg-slate-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-500">Traditional QA Cost</p>
+                  <p className="text-2xl font-bold">${calculationResults.humanCost.toLocaleString()}</p>
+                </div>
+                
+                <div className="bg-slate-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-500">AI QA Cost</p>
+                  <p className="text-2xl font-bold">${calculationResults.aiCost.toLocaleString()}</p>
+                </div>
+                
+                <div className="bg-green-50 p-4 rounded-lg border border-green-100">
+                  <p className="text-sm text-gray-500">Annual Savings</p>
+                  <p className="text-3xl font-bold text-green-600">
+                    ${calculationResults.savings.toLocaleString()}
+                  </p>
+                  <p className="text-lg font-medium text-green-600">
+                    ({calculationResults.savingsPercentage.toFixed(1)}% reduction)
+                  </p>
+                </div>
+                
+                <Button onClick={resetCalculator} variant="outline" className="w-full">
+                  Calculate Again
+                </Button>
+              </div>
+            )}
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -276,87 +429,51 @@ const HomePage = () => {
           </div>
           
           <div className="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-6">Your Organization</h3>
-                
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="agentCount">Number of Agents</Label>
-                    <Input 
-                      id="agentCount" 
-                      name="agentCount" 
-                      type="number" 
-                      value={formData.agentCount}
-                      onChange={handleInputChange}
-                    />
+            <div className="relative">
+              {/* Progress bar */}
+              {formStep < 3 && (
+                <div className="mb-8">
+                  <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+                    <div 
+                      className="bg-primary h-full transition-all duration-300" 
+                      style={{ width: `${(formStep / 2) * 100}%` }}
+                    ></div>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="avgSalary">Average QA Analyst Salary ($)</Label>
-                    <Input 
-                      id="avgSalary" 
-                      name="avgSalary" 
-                      type="number" 
-                      value={formData.avgSalary}
-                      onChange={handleInputChange}
-                    />
+                  <div className="flex justify-between mt-2 text-sm text-gray-500">
+                    <span>Team Size</span>
+                    <span>QA Salary</span>
+                    <span>Coverage</span>
                   </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="reviewRate">
-                      Percentage of Calls to Review (%)
-                    </Label>
-                    <Input 
-                      id="reviewRate" 
-                      name="reviewRate" 
-                      type="number" 
-                      value={formData.reviewRate}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  
-                  <Button 
-                    onClick={calculateROI} 
-                    className="w-full mt-4"
-                  >
-                    Calculate Savings
-                  </Button>
                 </div>
+              )}
+              
+              {/* Form step content */}
+              <div className="min-h-[320px] flex flex-col">
+                {renderStepContent()}
               </div>
               
-              <div className="bg-slate-50 rounded-lg p-6">
-                <h3 className="text-xl font-semibold mb-6">Your Potential Savings</h3>
-                
-                {calculationResults ? (
-                  <div className="space-y-6">
-                    <div>
-                      <p className="text-sm text-gray-500">Traditional QA Cost</p>
-                      <p className="text-2xl font-bold">${calculationResults.humanCost.toLocaleString()}</p>
-                    </div>
-                    
-                    <div>
-                      <p className="text-sm text-gray-500">AI QA Cost</p>
-                      <p className="text-2xl font-bold">${calculationResults.aiCost.toLocaleString()}</p>
-                    </div>
-                    
-                    <div className="pt-4 border-t border-gray-200">
-                      <p className="text-sm text-gray-500">Annual Savings</p>
-                      <p className="text-3xl font-bold text-green-600">
-                        ${calculationResults.savings.toLocaleString()}
-                      </p>
-                      <p className="text-lg font-medium text-green-600">
-                        ({calculationResults.savingsPercentage.toFixed(1)}% reduction)
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
-                    <BarChart2 className="h-12 w-12 mb-3 opacity-50" />
-                    <p>Enter your information and calculate to see potential savings</p>
-                  </div>
-                )}
-              </div>
+              {/* Navigation buttons */}
+              {formStep < 3 && (
+                <div className="flex justify-between mt-8">
+                  <Button
+                    variant="outline"
+                    onClick={prevStep}
+                    disabled={formStep === 0}
+                    className={formStep === 0 ? "invisible" : ""}
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-2" />
+                    Back
+                  </Button>
+                  <Button onClick={nextStep}>
+                    {formStep === 2 ? "Calculate Savings" : "Next"}
+                    {formStep === 2 ? (
+                      <BarChart2 className="h-4 w-4 ml-2" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 ml-2" />
+                    )}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
