@@ -2,7 +2,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogIn, UserPlus } from "lucide-react";
+import { LogIn, UserPlus, PresentationIcon, InfoIcon, DollarSign } from "lucide-react";
 
 const NavBar: React.FC = () => {
   return (
@@ -16,6 +16,25 @@ const NavBar: React.FC = () => {
           </div>
           
           <div className="flex items-center space-x-4">
+            <Link to="/pricing">
+              <Button variant="ghost" className="flex items-center gap-2">
+                <DollarSign className="h-4 w-4" />
+                Pricing
+              </Button>
+            </Link>
+            <Link to="/product">
+              <Button variant="ghost" className="flex items-center gap-2">
+                <InfoIcon className="h-4 w-4" />
+                Product
+              </Button>
+            </Link>
+            <Link to="/demo">
+              <Button variant="ghost" className="flex items-center gap-2">
+                <PresentationIcon className="h-4 w-4" />
+                Request Demo
+              </Button>
+            </Link>
+            <div className="h-6 border-l border-gray-300 mx-1"></div>
             <Link to="/dashboard">
               <Button variant="ghost" className="flex items-center gap-2">
                 <LogIn className="h-4 w-4" />
