@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -63,12 +64,12 @@ const HomePage = () => {
       ...formData,
       [name]: parseInt(value),
     });
-  };
-
-  const nextStep = () => {
+    
+    // Automatically advance to next step when an option is selected
     if (formStep < 2) {
       setFormStep(formStep + 1);
     } else {
+      // If we're on the last step, calculate ROI and show results
       calculateROI();
       setFormStep(3);
     }
@@ -201,6 +202,14 @@ const HomePage = () => {
                 </button>
               ))}
             </div>
+            <Button 
+              variant="outline" 
+              onClick={prevStep} 
+              className="flex items-center mt-4"
+            >
+              <ChevronLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
           </div>
         );
       case 2:
@@ -223,6 +232,14 @@ const HomePage = () => {
                 </button>
               ))}
             </div>
+            <Button 
+              variant="outline" 
+              onClick={prevStep} 
+              className="flex items-center mt-4"
+            >
+              <ChevronLeft className="h-4 w-4 mr-2" />
+              Back
+            </Button>
           </div>
         );
       case 3:
@@ -251,9 +268,19 @@ const HomePage = () => {
                   </p>
                 </div>
                 
-                <Button onClick={resetCalculator} variant="outline" className="w-full">
-                  Calculate Again
-                </Button>
+                <div className="flex flex-col gap-3">
+                  <Button onClick={resetCalculator} variant="outline" className="w-full">
+                    Calculate Again
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    onClick={prevStep} 
+                    className="flex items-center justify-center"
+                  >
+                    <ChevronLeft className="h-4 w-4 mr-2" />
+                    Back
+                  </Button>
+                </div>
               </div>
             )}
           </div>
@@ -454,29 +481,6 @@ const HomePage = () => {
               <div className="min-h-[320px] flex flex-col">
                 {renderStepContent()}
               </div>
-              
-              {/* Navigation buttons */}
-              {formStep < 3 && (
-                <div className="flex justify-between mt-8">
-                  <Button
-                    variant="outline"
-                    onClick={prevStep}
-                    disabled={formStep === 0}
-                    className={formStep === 0 ? "invisible" : ""}
-                  >
-                    <ChevronLeft className="h-4 w-4 mr-2" />
-                    Back
-                  </Button>
-                  <Button onClick={nextStep}>
-                    {formStep === 2 ? "Calculate Savings" : "Next"}
-                    {formStep === 2 ? (
-                      <BarChart2 className="h-4 w-4 ml-2" />
-                    ) : (
-                      <ChevronRight className="h-4 w-4 ml-2" />
-                    )}
-                  </Button>
-                </div>
-              )}
             </div>
           </div>
         </div>
