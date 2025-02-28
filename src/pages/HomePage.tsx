@@ -25,9 +25,9 @@ import {
 const HomePage = () => {
   const [formStep, setFormStep] = useState(0);
   const [formData, setFormData] = useState({
-    agentCount: 10,
-    avgSalary: 50000,
-    reviewRate: 20,
+    agentCount: "",
+    avgSalary: "",
+    reviewRate: "",
   });
   
   const [calculationResults, setCalculationResults] = useState<null | {
@@ -62,7 +62,7 @@ const HomePage = () => {
   const handleSelectChange = (name: string, value: string) => {
     setFormData({
       ...formData,
-      [name]: parseInt(value),
+      [name]: value,
     });
     
     // Automatically advance to next step when an option is selected
@@ -82,7 +82,9 @@ const HomePage = () => {
   };
 
   const calculateROI = () => {
-    const { agentCount, avgSalary, reviewRate } = formData;
+    const agentCount = parseInt(formData.agentCount);
+    const avgSalary = parseInt(formData.avgSalary);
+    const reviewRate = parseInt(formData.reviewRate);
     
     // Calculate how many calls need review per year
     const totalCalls = agentCount * 50 * 5 * 50; // 50 calls per day, 5 days a week, 50 weeks
@@ -109,6 +111,11 @@ const HomePage = () => {
 
   const resetCalculator = () => {
     setFormStep(0);
+    setFormData({
+      agentCount: "",
+      avgSalary: "",
+      reviewRate: "",
+    });
     setCalculationResults(null);
   };
 
@@ -170,11 +177,11 @@ const HomePage = () => {
                   key={option.value}
                   onClick={() => handleSelectChange("agentCount", option.value.toString())}
                   className={`flex items-center justify-between p-4 border rounded-lg hover:border-primary transition-all ${
-                    formData.agentCount === option.value ? "border-primary bg-primary/5" : "border-gray-200"
+                    formData.agentCount === option.value.toString() ? "border-primary bg-primary/5" : "border-gray-200"
                   }`}
                 >
                   <span className="font-medium">{option.label}</span>
-                  {formData.agentCount === option.value && (
+                  {formData.agentCount === option.value.toString() && (
                     <CheckCircle2 className="h-5 w-5 text-primary" />
                   )}
                 </button>
@@ -192,11 +199,11 @@ const HomePage = () => {
                   key={option.value}
                   onClick={() => handleSelectChange("avgSalary", option.value.toString())}
                   className={`flex items-center justify-between p-4 border rounded-lg hover:border-primary transition-all ${
-                    formData.avgSalary === option.value ? "border-primary bg-primary/5" : "border-gray-200"
+                    formData.avgSalary === option.value.toString() ? "border-primary bg-primary/5" : "border-gray-200"
                   }`}
                 >
                   <span className="font-medium">{option.label}</span>
-                  {formData.avgSalary === option.value && (
+                  {formData.avgSalary === option.value.toString() && (
                     <CheckCircle2 className="h-5 w-5 text-primary" />
                   )}
                 </button>
@@ -222,11 +229,11 @@ const HomePage = () => {
                   key={option.value}
                   onClick={() => handleSelectChange("reviewRate", option.value.toString())}
                   className={`flex items-center justify-between p-4 border rounded-lg hover:border-primary transition-all ${
-                    formData.reviewRate === option.value ? "border-primary bg-primary/5" : "border-gray-200"
+                    formData.reviewRate === option.value.toString() ? "border-primary bg-primary/5" : "border-gray-200"
                   }`}
                 >
                   <span className="font-medium">{option.label}</span>
-                  {formData.reviewRate === option.value && (
+                  {formData.reviewRate === option.value.toString() && (
                     <CheckCircle2 className="h-5 w-5 text-primary" />
                   )}
                 </button>
