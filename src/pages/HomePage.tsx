@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import NavBar from "@/components/NavBar";
 import { 
   CheckCircle2, 
   BarChart2, 
@@ -265,8 +265,11 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Navigation Bar */}
+      <NavBar />
+      
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-600 to-indigo-700 py-20">
+      <section className="bg-gradient-to-r from-blue-600 to-indigo-700 py-20 pt-28">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center">
             <div className="lg:w-1/2 text-white mb-10 lg:mb-0">
@@ -537,14 +540,16 @@ const HomePage = () => {
             Join the hundreds of companies using our platform to improve customer experience while reducing costs.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="font-medium"
-            >
-              Get Started
-            </Button>
-            <Link to="/">
+            <Link to="/dashboard">
+              <Button
+                size="lg"
+                variant="secondary"
+                className="font-medium"
+              >
+                Get Started
+              </Button>
+            </Link>
+            <Link to="/dashboard">
               <Button 
                 size="lg" 
                 variant="outline" 
