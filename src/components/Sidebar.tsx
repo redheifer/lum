@@ -29,6 +29,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 interface SidebarProps {
   activeTab: string;
@@ -41,6 +43,8 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
   const [userEmail, setUserEmail] = useState("user@example.com");
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteMessage, setInviteMessage] = useState("");
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const toggleAffiliateSection = () => {
     setIsAffiliateExpanded(!isAffiliateExpanded);
@@ -52,12 +56,20 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
 
   const handleSaveEmail = () => {
     console.log("Email updated to:", userEmail);
+    toast({
+      title: "Email updated",
+      description: "Your email has been updated successfully.",
+    });
     // Here you would typically update the email in your auth system
   };
 
   const handleInviteUser = () => {
     console.log("Inviting user:", inviteEmail);
     console.log("Message:", inviteMessage);
+    toast({
+      title: "Invitation sent",
+      description: `Invitation sent to ${inviteEmail}`,
+    });
     setInviteEmail("");
     setInviteMessage("");
     // Here you would typically send the invitation
@@ -65,7 +77,17 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
 
   const handleLogout = () => {
     console.log("Logging out...");
-    // Here you would typically handle logout
+    // Clear any auth state/tokens from localStorage
+    localStorage.removeItem("auth_token"); // Add any other auth-related items to remove
+    
+    // Show toast notification
+    toast({
+      title: "Logged out",
+      description: "You have been logged out successfully.",
+    });
+    
+    // Redirect to login page
+    navigate("/");
   };
 
   const affiliateProducts = [
