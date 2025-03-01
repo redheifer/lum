@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Slider } from "@/components/ui/slider";
 import NavBar from "@/components/NavBar";
 import { 
   CheckCircle2, 
@@ -36,6 +36,45 @@ const HomePage = () => {
     savings: number;
     savingsPercentage: number;
   }>(null);
+
+  // New state for pricing slider
+  const [selectedPricingTier, setSelectedPricingTier] = useState(0);
+
+  const pricingTiers = [
+    {
+      name: "Free",
+      pricePerCall: 0,
+      features: ["10 calls per day", "Basic analytics", "Email support"],
+      buttonText: "Start Free",
+      highlighted: false,
+    },
+    {
+      name: "Tier 1",
+      pricePerCall: 0.75,
+      features: ["100 calls per day", "Advanced analytics", "Priority email support", "Custom scoring"],
+      buttonText: "Get Started",
+      highlighted: false,
+    },
+    {
+      name: "Tier 2",
+      pricePerCall: 0.50,
+      features: ["500 calls per day", "All analytics features", "Phone support", "Custom scoring", "Team management"],
+      buttonText: "Popular Choice",
+      highlighted: true,
+    },
+    {
+      name: "Tier 3 - White Label",
+      pricePerCall: 0.35,
+      features: ["Unlimited calls", "Fully custom solution", "Dedicated account manager", "API access", "White label solution"],
+      buttonText: "Contact Sales",
+      highlighted: false,
+    }
+  ];
+
+  // Handle slider change
+  const handleSliderChange = (value: number[]) => {
+    setSelectedPricingTier(value[0]);
+  };
 
   const agentCountOptions = [
     { value: 5, label: "Small Team (5 agents)" },
@@ -488,6 +527,77 @@ const HomePage = () => {
               <div className="min-h-[320px] flex flex-col">
                 {renderStepContent()}
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Pricing Section - Modified to include the slider */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold mb-4">Flexible Pricing Plans</h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Choose the perfect plan for your call quality assurance needs
+            </p>
+          </div>
+          
+          {/* Pricing Slider - This is the modified element */}
+          <div className="bg-white rounded-xl shadow-md p-8 max-w-4xl mx-auto mb-12">
+            <h3 className="text-xl font-semibold mb-6 text-center">Select Your Plan</h3>
+            
+            <div className="mb-12">
+              <Slider
+                defaultValue={[0]}
+                max={3}
+                step={1}
+                value={[selectedPricingTier]}
+                onValueChange={handleSliderChange}
+                className="mb-8"
+              />
+              
+              {/* Tier labels */}
+              <div className="flex justify-between px-2 text-sm text-gray-600">
+                <span>Free</span>
+                <span>Tier 1</span>
+                <span>Tier 2</span>
+                <span>Custom</span>
+              </div>
+            </div>
+            
+            {/* Selected Pricing Tier */}
+            <div className={`border rounded-lg p-6 transition-all duration-300 ${pricingTiers[selectedPricingTier].highlighted ? 'border-primary bg-primary/5 shadow-lg' : 'border-gray-200'}`}>
+              <div className="flex justify-between items-center mb-4">
+                <h4 className="text-2xl font-bold">{pricingTiers[selectedPricingTier].name}</h4>
+                <div className="text-right">
+                  <span className="text-3xl font-bold">
+                    ${pricingTiers[selectedPricingTier].pricePerCall.toFixed(2)}
+                  </span>
+                  <span className="text-gray-500 text-sm"> / call</span>
+                </div>
+              </div>
+              
+              <div className="space-y-3 mb-6">
+                {pricingTiers[selectedPricingTier].features.map((feature, index) => (
+                  <div key={index} className="flex items-start">
+                    <CheckCircle2 className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
+                    <span>{feature}</span>
+                  </div>
+                ))}
+              </div>
+              
+              <Button 
+                className={`w-full ${pricingTiers[selectedPricingTier].highlighted ? 'bg-primary' : ''}`}
+                variant={pricingTiers[selectedPricingTier].highlighted ? 'default' : 'outline'}
+              >
+                {pricingTiers[selectedPricingTier].buttonText}
+              </Button>
+              
+              {selectedPricingTier === 3 && (
+                <p className="text-center text-sm text-gray-500 mt-4">
+                  Contact our sales team for custom volume pricing
+                </p>
+              )}
             </div>
           </div>
         </div>
