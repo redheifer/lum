@@ -115,16 +115,19 @@ export type Database = {
       }
       onboarding: {
         Row: {
+          businessdata: Json | null
           currentstep: number
           id: string
           iscomplete: boolean
         }
         Insert: {
+          businessdata?: Json | null
           currentstep?: number
           id?: string
           iscomplete?: boolean
         }
         Update: {
+          businessdata?: Json | null
           currentstep?: number
           id?: string
           iscomplete?: boolean

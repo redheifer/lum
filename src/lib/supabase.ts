@@ -57,7 +57,15 @@ export async function fetchCallsByCampaign(campaignId: string) {
     rating: item.rating,
     description: item.description,
     disposition: item.disposition,
-    createdAt: item.createdat
+    createdAt: item.createdat,
+    // Add needed fields for CallReviewCard
+    status: item.disposition,
+    customer: item.callerid,
+    agent: item.target,
+    date: item.calldate,
+    tags: [],
+    qaScore: item.rating || 0,
+    aiAnalysis: item.description
   })) as Call[];
 }
 
@@ -77,7 +85,7 @@ export async function fetchOnboardingState() {
     id: data.id,
     isComplete: data.iscomplete,
     currentStep: data.currentstep,
-    businessData: data.businessdata ? JSON.parse(data.businessdata) : undefined
+    businessData: data.businessdata ? JSON.parse(JSON.stringify(data.businessdata)) : undefined
   } as OnboardingState;
 }
 
@@ -88,7 +96,7 @@ export async function updateOnboardingState(state: OnboardingState) {
       id: state.id,
       iscomplete: state.isComplete,
       currentstep: state.currentStep,
-      businessdata: state.businessData ? JSON.stringify(state.businessData) : null
+      businessdata: state.businessData || null
     });
   
   if (error) {
