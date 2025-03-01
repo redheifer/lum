@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Settings, ChevronDown, ChevronUp, Mail, UserPlus, LogOut } from "lucide-react";
+import { Settings, ChevronDown, ChevronUp, User, UserPlus, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,12 +13,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 const SettingsSection: React.FC = () => {
   const [isSettingsExpanded, setIsSettingsExpanded] = useState(false);
   const [userEmail, setUserEmail] = useState("user@example.com");
+  const [userName, setUserName] = useState("John Doe");
+  const [userTitle, setUserTitle] = useState("Product Manager");
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteMessage, setInviteMessage] = useState("");
   const navigate = useNavigate();
@@ -28,13 +31,13 @@ const SettingsSection: React.FC = () => {
     setIsSettingsExpanded(!isSettingsExpanded);
   };
 
-  const handleSaveEmail = () => {
-    console.log("Email updated to:", userEmail);
+  const handleSaveProfile = () => {
+    console.log("Profile updated:", { userEmail, userName, userTitle });
     toast({
-      title: "Email updated",
-      description: "Your email has been updated successfully.",
+      title: "Profile updated",
+      description: "Your profile has been updated successfully.",
     });
-    // Here you would typically update the email in your auth system
+    // Here you would typically update the profile in your auth system
   };
 
   const handleInviteUser = () => {
@@ -83,32 +86,52 @@ const SettingsSection: React.FC = () => {
       {isSettingsExpanded && (
         <div className="px-4 pb-4">
           <div className="space-y-3">
-            {/* Edit Email Setting */}
+            {/* Update Profile Setting */}
             <Dialog>
               <DialogTrigger asChild>
                 <button className="w-full p-2 rounded-md border border-slate-200 hover:border-green-200 hover:bg-green-50 transition-colors flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-green-600" />
-                  <span className="text-sm">Edit Email</span>
+                  <User className="h-4 w-4 text-green-600" />
+                  <span className="text-sm">Update Profile</span>
                 </button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Edit your email</DialogTitle>
+                  <DialogTitle>Edit your profile</DialogTitle>
                   <DialogDescription>
-                    Change the email address associated with your account.
+                    Update your profile information below.
                   </DialogDescription>
                 </DialogHeader>
-                <div className="py-4">
-                  <Input 
-                    type="email"
-                    placeholder="you@example.com"
-                    value={userEmail}
-                    onChange={(e) => setUserEmail(e.target.value)}
-                    className="mb-2"
-                  />
+                <div className="py-4 space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Input 
+                      id="name"
+                      type="text"
+                      value={userName}
+                      onChange={(e) => setUserName(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input 
+                      id="email"
+                      type="email"
+                      value={userEmail}
+                      onChange={(e) => setUserEmail(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="title">Job Title</Label>
+                    <Input 
+                      id="title"
+                      type="text"
+                      value={userTitle}
+                      onChange={(e) => setUserTitle(e.target.value)}
+                    />
+                  </div>
                 </div>
                 <DialogFooter>
-                  <Button type="submit" onClick={handleSaveEmail}>Save Changes</Button>
+                  <Button type="submit" onClick={handleSaveProfile}>Save Changes</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -130,9 +153,9 @@ const SettingsSection: React.FC = () => {
                 </DialogHeader>
                 <div className="py-4 space-y-4">
                   <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium">Email</label>
+                    <Label htmlFor="invite-email">Email</Label>
                     <Input 
-                      id="email"
+                      id="invite-email"
                       type="email"
                       placeholder="colleague@example.com"
                       value={inviteEmail}
@@ -140,7 +163,7 @@ const SettingsSection: React.FC = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <label htmlFor="message" className="text-sm font-medium">Message (optional)</label>
+                    <Label htmlFor="message">Message (optional)</Label>
                     <Textarea 
                       id="message"
                       placeholder="Join our workspace to collaborate!"
