@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,9 +11,24 @@ import {
   Mic, 
   Laptop,
   Zap,
-  Info
+  Info,
+  Settings,
+  LogOut,
+  Mail,
+  UserPlus
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 interface SidebarProps {
   activeTab: string;
@@ -23,9 +37,35 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
   const [isAffiliateExpanded, setIsAffiliateExpanded] = useState(false);
+  const [isSettingsExpanded, setIsSettingsExpanded] = useState(false);
+  const [userEmail, setUserEmail] = useState("user@example.com");
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteMessage, setInviteMessage] = useState("");
 
   const toggleAffiliateSection = () => {
     setIsAffiliateExpanded(!isAffiliateExpanded);
+  };
+
+  const toggleSettingsSection = () => {
+    setIsSettingsExpanded(!isSettingsExpanded);
+  };
+
+  const handleSaveEmail = () => {
+    console.log("Email updated to:", userEmail);
+    // Here you would typically update the email in your auth system
+  };
+
+  const handleInviteUser = () => {
+    console.log("Inviting user:", inviteEmail);
+    console.log("Message:", inviteMessage);
+    setInviteEmail("");
+    setInviteMessage("");
+    // Here you would typically send the invitation
+  };
+
+  const handleLogout = () => {
+    console.log("Logging out...");
+    // Here you would typically handle logout
   };
 
   const affiliateProducts = [
@@ -90,8 +130,112 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
           {/* Content will be rendered in the main area, not here */}
         </Tabs>
         
-        {/* Affiliate Products Section */}
+        {/* Settings Section */}
         <div className="mt-auto border-t">
+          <button 
+            onClick={toggleSettingsSection}
+            className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <Settings className="h-4 w-4 text-green-600" />
+              <span className="font-medium">Settings</span>
+            </div>
+            {isSettingsExpanded ? 
+              <ChevronUp className="h-4 w-4 text-slate-400" /> : 
+              <ChevronDown className="h-4 w-4 text-slate-400" />
+            }
+          </button>
+          
+          {isSettingsExpanded && (
+            <div className="px-4 pb-4">
+              <div className="space-y-3">
+                {/* Edit Email Setting */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button className="w-full p-2 rounded-md border border-slate-200 hover:border-green-200 hover:bg-green-50 transition-colors flex items-center gap-2">
+                      <Mail className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">Edit Email</span>
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Edit your email</DialogTitle>
+                      <DialogDescription>
+                        Change the email address associated with your account.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4">
+                      <Input 
+                        type="email"
+                        placeholder="you@example.com"
+                        value={userEmail}
+                        onChange={(e) => setUserEmail(e.target.value)}
+                        className="mb-2"
+                      />
+                    </div>
+                    <DialogFooter>
+                      <Button type="submit" onClick={handleSaveEmail}>Save Changes</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                
+                {/* Invite Users Setting */}
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button className="w-full p-2 rounded-md border border-slate-200 hover:border-green-200 hover:bg-green-50 transition-colors flex items-center gap-2">
+                      <UserPlus className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">Invite Users</span>
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Invite team members</DialogTitle>
+                      <DialogDescription>
+                        Send invitations to your colleagues to join your workspace.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="py-4 space-y-4">
+                      <div className="space-y-2">
+                        <label htmlFor="email" className="text-sm font-medium">Email</label>
+                        <Input 
+                          id="email"
+                          type="email"
+                          placeholder="colleague@example.com"
+                          value={inviteEmail}
+                          onChange={(e) => setInviteEmail(e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label htmlFor="message" className="text-sm font-medium">Message (optional)</label>
+                        <Textarea 
+                          id="message"
+                          placeholder="Join our workspace to collaborate!"
+                          value={inviteMessage}
+                          onChange={(e) => setInviteMessage(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button type="submit" onClick={handleInviteUser}>Send Invitation</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+                
+                {/* Logout Button */}
+                <button 
+                  onClick={handleLogout}
+                  className="w-full p-2 rounded-md border border-slate-200 hover:border-red-200 hover:bg-red-50 transition-colors flex items-center gap-2"
+                >
+                  <LogOut className="h-4 w-4 text-red-600" />
+                  <span className="text-sm">Log Out</span>
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+        
+        {/* Affiliate Products Section */}
+        <div className="border-t">
           <button 
             onClick={toggleAffiliateSection}
             className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-50 transition-colors"
