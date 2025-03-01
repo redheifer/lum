@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
-import { updateOnboardingState } from '@/lib/supabase';
+import { updateOnboardingState, createCampaign } from '@/lib/supabase';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 interface OnboardingWizardProps {
   onComplete: () => void;
@@ -23,6 +24,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
     publisher: '',
     target: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const handleChange = (field: string, value: string) => {
     setFormData({ ...formData, [field]: value });
@@ -43,16 +45,39 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   };
   
   const handleComplete = async () => {
-    // Save onboarding state
-    await updateOnboardingState({ isComplete: true, currentStep: 3 });
-    
-    // Create initial campaign if all data is filled
-    if (formData.campaignName && formData.publisher && formData.target) {
-      // Logic to create first campaign
-      console.log('Creating first campaign with data:', formData);
+    try {
+      setIsSubmitting(true);
+      // Save onboarding state
+      await updateOnboardingState({ isComplete: true, currentStep: 3 });
+      
+      // Create initial campaign if all data is filled
+      if (formData.campaignName && formData.publisher && formData.target && formData.platform) {
+        const campaignData = {
+          name: formData.campaignName,
+          publisher: formData.publisher,
+          target: formData.target,
+          platform: formData.platform || 'Retreaver',
+          status: 'active' as const
+        };
+        
+        const newCampaign = await createCampaign(campaignData);
+        
+        if (!newCampaign) {
+          throw new Error('Failed to create campaign');
+        }
+        
+        toast.success('Campaign created successfully!');
+      } else {
+        toast.warning('Please fill all required fields to create a campaign');
+      }
+      
+      onComplete();
+    } catch (error) {
+      toast.error('Error completing onboarding');
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    onComplete();
   };
   
   return (
@@ -187,8 +212,8 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
             <span className="text-sm text-gray-500">
               Step {step} of 3
             </span>
-            <Button onClick={handleNext}>
-              {step === 3 ? 'Complete' : 'Next'}
+            <Button onClick={handleNext} disabled={isSubmitting}>
+              {step === 3 ? (isSubmitting ? 'Completing...' : 'Complete') : 'Next'}
             </Button>
           </div>
         </CardFooter>

@@ -9,7 +9,128 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      calls: {
+        Row: {
+          calldate: string
+          callerid: string
+          campaignid: string | null
+          campaignname: string | null
+          createdat: string | null
+          description: string | null
+          disposition: string | null
+          duration: string
+          endcallsource: string
+          id: string
+          inboundcallid: string
+          payout: number
+          platform: string
+          publisher: string
+          rating: number | null
+          recording: string | null
+          revenue: number
+          target: string
+          transcript: string | null
+        }
+        Insert: {
+          calldate: string
+          callerid: string
+          campaignid?: string | null
+          campaignname?: string | null
+          createdat?: string | null
+          description?: string | null
+          disposition?: string | null
+          duration: string
+          endcallsource: string
+          id?: string
+          inboundcallid: string
+          payout?: number
+          platform: string
+          publisher: string
+          rating?: number | null
+          recording?: string | null
+          revenue?: number
+          target: string
+          transcript?: string | null
+        }
+        Update: {
+          calldate?: string
+          callerid?: string
+          campaignid?: string | null
+          campaignname?: string | null
+          createdat?: string | null
+          description?: string | null
+          disposition?: string | null
+          duration?: string
+          endcallsource?: string
+          id?: string
+          inboundcallid?: string
+          payout?: number
+          platform?: string
+          publisher?: string
+          rating?: number | null
+          recording?: string | null
+          revenue?: number
+          target?: string
+          transcript?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calls_campaignid_fkey"
+            columns: ["campaignid"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          createdat: string | null
+          id: string
+          name: string
+          platform: string
+          publisher: string
+          status: string
+          target: string
+        }
+        Insert: {
+          createdat?: string | null
+          id?: string
+          name: string
+          platform: string
+          publisher: string
+          status: string
+          target: string
+        }
+        Update: {
+          createdat?: string | null
+          id?: string
+          name?: string
+          platform?: string
+          publisher?: string
+          status?: string
+          target?: string
+        }
+        Relationships: []
+      }
+      onboarding: {
+        Row: {
+          currentstep: number
+          id: string
+          iscomplete: boolean
+        }
+        Insert: {
+          currentstep?: number
+          id?: string
+          iscomplete?: boolean
+        }
+        Update: {
+          currentstep?: number
+          id?: string
+          iscomplete?: boolean
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
