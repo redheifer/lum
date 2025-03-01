@@ -72,11 +72,12 @@ export async function fetchOnboardingState() {
     return { isComplete: false, currentStep: 1 } as OnboardingState;
   }
   
-  // Map database field names to our interface
+  // Map database field names to our interface and parse businessData if it exists
   return {
     id: data.id,
     isComplete: data.iscomplete,
-    currentStep: data.currentstep
+    currentStep: data.currentstep,
+    businessData: data.businessdata ? JSON.parse(data.businessdata) : undefined
   } as OnboardingState;
 }
 
@@ -86,7 +87,8 @@ export async function updateOnboardingState(state: OnboardingState) {
     .upsert({
       id: state.id,
       iscomplete: state.isComplete,
-      currentstep: state.currentStep
+      currentstep: state.currentStep,
+      businessdata: state.businessData ? JSON.stringify(state.businessData) : null
     });
   
   if (error) {

@@ -29,12 +29,25 @@ export interface Call {
   description?: string;
   disposition?: string;
   createdAt: string;
+  // Fields needed by CallReviewCard
+  status?: string;
+  customer?: string;
+  agent?: string;
+  tags?: string[];
+  date?: string;
+  qaScore?: number;
+  aiAnalysis?: string;
 }
 
 export interface OnboardingState {
   id?: string;
   isComplete: boolean;
   currentStep: number;
+  businessData?: {
+    companyName: string;
+    industry: string;
+    goals: string;
+  };
 }
 
 // Add additional types needed by unused components
@@ -53,3 +66,5 @@ export interface PromptContext {
   dateAdded: string;
   status: 'active' | 'archived';
 }
+
+export type ThemeMode = 'light' | 'dark';

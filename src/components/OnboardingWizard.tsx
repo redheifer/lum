@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { updateOnboardingState, createCampaign } from '@/lib/supabase';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,31 +8,59 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { OnboardingState } from '@/lib/types';
 
 interface OnboardingWizardProps {
   onComplete: () => void;
+  initialState?: OnboardingState;
 }
 
-const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
+const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete, initialState }) => {
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
+  const [businessData, setBusinessData] = useState({
     companyName: '',
     industry: '',
-    platform: '',
-    goals: '',
+    goals: ''
+  });
+  const [campaignData, setCampaignData] = useState({
     campaignName: '',
+    platform: '',
     publisher: '',
     target: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const handleChange = (field: string, value: string) => {
-    setFormData({ ...formData, [field]: value });
+  useEffect(() => {
+    // Initialize form with existing data if available
+    if (initialState?.businessData) {
+      setBusinessData(initialState.businessData);
+    }
+  }, [initialState]);
+  
+  const handleBusinessDataChange = (field: string, value: string) => {
+    setBusinessData({ ...businessData, [field]: value });
   };
   
-  const handleNext = () => {
-    if (step < 3) {
-      setStep(step + 1);
+  const handleCampaignDataChange = (field: string, value: string) => {
+    setCampaignData({ ...campaignData, [field]: value });
+  };
+  
+  const handleNext = async () => {
+    if (step === 1) {
+      // Save business data before proceeding
+      const updated = await updateOnboardingState({
+        id: initialState?.id,
+        isComplete: false,
+        currentStep: 2,
+        businessData
+      });
+      
+      if (!updated) {
+        toast.error('Failed to save business data');
+        return;
+      }
+      
+      setStep(2);
     } else {
       handleComplete();
     }
@@ -47,20 +75,26 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   const handleComplete = async () => {
     try {
       setIsSubmitting(true);
+      
       // Save onboarding state
-      await updateOnboardingState({ isComplete: true, currentStep: 3 });
+      await updateOnboardingState({
+        id: initialState?.id,
+        isComplete: true,
+        currentStep: 2,
+        businessData
+      });
       
       // Create initial campaign if all data is filled
-      if (formData.campaignName && formData.publisher && formData.target && formData.platform) {
-        const campaignData = {
-          name: formData.campaignName,
-          publisher: formData.publisher,
-          target: formData.target,
-          platform: formData.platform || 'Retreaver',
+      if (campaignData.campaignName && campaignData.publisher && campaignData.target) {
+        const campaignToCreate = {
+          name: campaignData.campaignName,
+          publisher: campaignData.publisher,
+          target: campaignData.target,
+          platform: campaignData.platform || 'Retreaver',
           status: 'active' as const
         };
         
-        const newCampaign = await createCampaign(campaignData);
+        const newCampaign = await createCampaign(campaignToCreate);
         
         if (!newCampaign) {
           throw new Error('Failed to create campaign');
@@ -69,6 +103,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
         toast.success('Campaign created successfully!');
       } else {
         toast.warning('Please fill all required fields to create a campaign');
+        return;
       }
       
       onComplete();
@@ -82,35 +117,39 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
   
   return (
     <div className="max-w-2xl mx-auto">
-      <Card>
-        <CardHeader>
-          <CardTitle>Welcome to Call Campaign Manager</CardTitle>
-          <CardDescription>
+      <Card className="border-2 border-primary/20 shadow-lg bg-gradient-to-br from-card to-card/50">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+            Welcome to Call Campaign Manager
+          </CardTitle>
+          <CardDescription className="text-center text-lg">
             Let's set up your account in a few simple steps
           </CardDescription>
         </CardHeader>
         
         <CardContent>
           {step === 1 && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Step 1: About Your Business</h3>
-              <div className="space-y-3">
+            <div className="space-y-6 animate-fade-in">
+              <h3 className="text-xl font-medium">Step 1: About Your Business</h3>
+              <div className="space-y-4">
                 <div>
-                  <Label htmlFor="companyName">Company Name</Label>
+                  <Label htmlFor="companyName" className="text-md">Company Name</Label>
                   <Input 
                     id="companyName" 
-                    value={formData.companyName}
-                    onChange={(e) => handleChange('companyName', e.target.value)}
+                    value={businessData.companyName}
+                    onChange={(e) => handleBusinessDataChange('companyName', e.target.value)}
+                    className="mt-1"
+                    placeholder="Enter your company name"
                   />
                 </div>
                 
                 <div>
-                  <Label htmlFor="industry">Industry</Label>
+                  <Label htmlFor="industry" className="text-md">Industry</Label>
                   <Select 
-                    value={formData.industry} 
-                    onValueChange={(value) => handleChange('industry', value)}
+                    value={businessData.industry} 
+                    onValueChange={(value) => handleBusinessDataChange('industry', value)}
                   >
-                    <SelectTrigger id="industry">
+                    <SelectTrigger id="industry" className="mt-1">
                       <SelectValue placeholder="Select your industry" />
                     </SelectTrigger>
                     <SelectContent>
@@ -118,25 +157,49 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                       <SelectItem value="healthcare">Healthcare</SelectItem>
                       <SelectItem value="finance">Finance</SelectItem>
                       <SelectItem value="retail">Retail</SelectItem>
+                      <SelectItem value="education">Education</SelectItem>
+                      <SelectItem value="technology">Technology</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
+                
+                <div>
+                  <Label htmlFor="goals" className="text-md">Business Goals</Label>
+                  <Textarea 
+                    id="goals" 
+                    placeholder="What are you hoping to achieve with call campaigns?"
+                    value={businessData.goals}
+                    onChange={(e) => handleBusinessDataChange('goals', e.target.value)}
+                    className="mt-1"
+                  />
                 </div>
               </div>
             </div>
           )}
           
           {step === 2 && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Step 2: Call Tracking Platform</h3>
-              <div className="space-y-3">
+            <div className="space-y-6 animate-fade-in">
+              <h3 className="text-xl font-medium">Step 2: Create Your First Campaign</h3>
+              <div className="space-y-4">
                 <div>
-                  <Label htmlFor="platform">Preferred Call Tracking Platform</Label>
+                  <Label htmlFor="campaignName" className="text-md">Campaign Name</Label>
+                  <Input 
+                    id="campaignName" 
+                    placeholder="e.g., Spring Auto Insurance Leads"
+                    value={campaignData.campaignName}
+                    onChange={(e) => handleCampaignDataChange('campaignName', e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="platform" className="text-md">Call Tracking Platform</Label>
                   <Select 
-                    value={formData.platform} 
-                    onValueChange={(value) => handleChange('platform', value)}
+                    value={campaignData.platform} 
+                    onValueChange={(value) => handleCampaignDataChange('platform', value)}
                   >
-                    <SelectTrigger id="platform">
+                    <SelectTrigger id="platform" className="mt-1">
                       <SelectValue placeholder="Select a platform" />
                     </SelectTrigger>
                     <SelectContent>
@@ -149,49 +212,24 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
                 </div>
                 
                 <div>
-                  <Label htmlFor="goals">Goals & Objectives</Label>
-                  <Textarea 
-                    id="goals" 
-                    placeholder="What are you hoping to achieve with call campaigns?"
-                    value={formData.goals}
-                    onChange={(e) => handleChange('goals', e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-          
-          {step === 3 && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Step 3: Create Your First Campaign</h3>
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="campaignName">Campaign Name</Label>
-                  <Input 
-                    id="campaignName" 
-                    placeholder="e.g., Spring Auto Insurance Leads"
-                    value={formData.campaignName}
-                    onChange={(e) => handleChange('campaignName', e.target.value)}
-                  />
-                </div>
-                
-                <div>
-                  <Label htmlFor="publisher">Publisher</Label>
+                  <Label htmlFor="publisher" className="text-md">Publisher</Label>
                   <Input 
                     id="publisher" 
                     placeholder="e.g., SHL Agency"
-                    value={formData.publisher}
-                    onChange={(e) => handleChange('publisher', e.target.value)}
+                    value={campaignData.publisher}
+                    onChange={(e) => handleCampaignDataChange('publisher', e.target.value)}
+                    className="mt-1"
                   />
                 </div>
                 
                 <div>
-                  <Label htmlFor="target">Target</Label>
+                  <Label htmlFor="target" className="text-md">Target</Label>
                   <Input 
                     id="target" 
                     placeholder="e.g., Auto Insurance Leads"
-                    value={formData.target}
-                    onChange={(e) => handleChange('target', e.target.value)}
+                    value={campaignData.target}
+                    onChange={(e) => handleCampaignDataChange('target', e.target.value)}
+                    className="mt-1"
                   />
                 </div>
               </div>
@@ -199,21 +237,26 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete }) => {
           )}
         </CardContent>
         
-        <CardFooter className="flex justify-between">
+        <CardFooter className="flex justify-between pt-6">
           <Button 
             variant="outline" 
             onClick={handleBack}
             disabled={step === 1}
+            className="transition-all hover:shadow-md"
           >
             Back
           </Button>
           
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-500">
-              Step {step} of 3
+              Step {step} of 2
             </span>
-            <Button onClick={handleNext} disabled={isSubmitting}>
-              {step === 3 ? (isSubmitting ? 'Completing...' : 'Complete') : 'Next'}
+            <Button 
+              onClick={handleNext} 
+              disabled={isSubmitting || (step === 1 && !businessData.companyName) || (step === 2 && (!campaignData.campaignName || !campaignData.publisher || !campaignData.target))} 
+              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary transition-all hover:shadow-md"
+            >
+              {step === 2 ? (isSubmitting ? 'Completing...' : 'Complete') : 'Next'}
             </Button>
           </div>
         </CardFooter>
