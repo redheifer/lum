@@ -32,6 +32,24 @@ export interface Call {
 }
 
 export interface OnboardingState {
+  id?: string;
   isComplete: boolean;
   currentStep: number;
+}
+
+// Add additional types needed by unused components
+export interface TrainingData {
+  id: string;
+  callReference: string;
+  correctDisposition: string;
+  notes?: string;
+  dateAdded: string;
+}
+
+export interface PromptContext {
+  id: string;
+  prompt: string;
+  notes?: string;
+  dateAdded: string;
+  status: 'active' | 'archived';
 }

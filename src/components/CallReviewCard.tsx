@@ -11,7 +11,10 @@ interface CallReviewCardProps {
   call: Call;
 }
 
-const StatusIcon = ({ status }: { status: Call['status'] }) => {
+// Custom status definition since it's not in our Call type
+type CallStatus = 'reviewed' | 'flagged' | 'pending';
+
+const StatusIcon = ({ status }: { status: CallStatus }) => {
   switch (status) {
     case 'reviewed':
       return <CheckCircle className="h-4 w-4 text-green-500" />;
@@ -26,6 +29,13 @@ const StatusIcon = ({ status }: { status: Call['status'] }) => {
 
 const CallReviewCard: React.FC<CallReviewCardProps> = ({ call }) => {
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Derive a status from call disposition or other properties
+  const getCallStatus = (): CallStatus => {
+    if (call.disposition?.includes('Technical/Quality Issue')) return 'flagged';
+    if (call.rating && call.rating > 3) return 'reviewed';
+    return 'pending';
+  };
 
   const getScoreColor = (score: number) => {
     if (score >= 90) return 'text-green-600';
@@ -33,10 +43,15 @@ const CallReviewCard: React.FC<CallReviewCardProps> = ({ call }) => {
     return 'text-red-600';
   };
 
-  const getScoreBadgeVariant = (score: number): "success" | "warning" | "destructive" => {
-    if (score >= 90) return 'success';
-    if (score >= 75) return 'warning';
+  const getScoreBadgeVariant = (score: number) => {
+    if (score >= 90) return 'default';
+    if (score >= 75) return 'secondary';
     return 'destructive';
+  };
+
+  // Extract caller name from callerId
+  const getCallerName = () => {
+    return call.callerId.split('@')[0] || 'Unknown Caller';
   };
 
   return (
@@ -44,36 +59,33 @@ const CallReviewCard: React.FC<CallReviewCardProps> = ({ call }) => {
       <div className="flex items-center p-3 border-b hover:bg-slate-50 transition-colors">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <StatusIcon status={call.status} />
-            <span className="font-medium text-sm truncate">{call.customer}</span>
+            <StatusIcon status={getCallStatus()} />
+            <span className="font-medium text-sm truncate">{getCallerName()}</span>
           </div>
-          <div className="text-xs text-slate-500 truncate">Agent: {call.agent}</div>
+          <div className="text-xs text-slate-500 truncate">Campaign: {call.campaignName}</div>
         </div>
 
         <div className="flex-1 hidden md:block">
           <div className="flex gap-1 flex-wrap">
-            {call.tags.slice(0, 3).map((tag, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
-                {tag}
-              </Badge>
-            ))}
-            {call.tags.length > 3 && (
+            {call.disposition && (
               <Badge variant="outline" className="text-xs">
-                +{call.tags.length - 3}
+                {call.disposition}
               </Badge>
             )}
           </div>
         </div>
 
         <div className="flex-1 hidden md:block">
-          <div className="text-xs text-slate-500">{call.date}</div>
+          <div className="text-xs text-slate-500">{new Date(call.callDate).toLocaleString()}</div>
           <div className="text-xs text-slate-500">{call.duration}</div>
         </div>
 
         <div className="flex items-center gap-2 ml-2">
-          <Badge variant={getScoreBadgeVariant(call.qaScore)} className="text-xs">
-            {call.qaScore}%
-          </Badge>
+          {call.rating && (
+            <Badge variant={call.rating > 3 ? "default" : "destructive"} className="text-xs">
+              {call.rating}/5
+            </Badge>
+          )}
           
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
@@ -83,9 +95,9 @@ const CallReviewCard: React.FC<CallReviewCardProps> = ({ call }) => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] max-h-[80vh]">
               <DialogHeader>
-                <DialogTitle>Call Review: {call.customer}</DialogTitle>
+                <DialogTitle>Call Review: {getCallerName()}</DialogTitle>
                 <DialogDescription>
-                  Agent: {call.agent} | {call.date} | {call.duration}
+                  Campaign: {call.campaignName} | {new Date(call.callDate).toLocaleString()} | {call.duration}
                 </DialogDescription>
               </DialogHeader>
               <ScrollArea className="mt-4 max-h-[60vh]">
@@ -97,16 +109,18 @@ const CallReviewCard: React.FC<CallReviewCardProps> = ({ call }) => {
                     </div>
                   </div>
                   <div>
-                    <h4 className="text-sm font-medium mb-2">AI Analysis</h4>
+                    <h4 className="text-sm font-medium mb-2">Description</h4>
                     <div className="text-sm bg-slate-50 p-3 rounded-md">
-                      {call.aiAnalysis || "Analysis not available"}
+                      {call.description || "Description not available"}
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Badge variant={getScoreBadgeVariant(call.qaScore)}>
-                      QA Score: {call.qaScore}%
-                    </Badge>
-                    <Badge variant="outline">{call.status}</Badge>
+                    {call.rating && (
+                      <Badge variant={call.rating > 3 ? "default" : "destructive"}>
+                        Rating: {call.rating}/5
+                      </Badge>
+                    )}
+                    <Badge variant="outline">{getCallStatus()}</Badge>
                   </div>
                 </div>
               </ScrollArea>

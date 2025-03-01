@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { TrainingData } from '@/lib/types';
-import { mockTrainingData } from '@/lib/mockData';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,7 +11,7 @@ import { PlusCircle, FileText, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const AITraining: React.FC = () => {
-  const [trainingData, setTrainingData] = useState<TrainingData[]>(mockTrainingData);
+  const [trainingData, setTrainingData] = useState<TrainingData[]>([]);
   const [newTraining, setNewTraining] = useState<Partial<TrainingData>>({
     callReference: '',
     correctDisposition: '',

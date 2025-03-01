@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { PromptContext } from '@/lib/types';
-import { mockPromptContexts } from '@/lib/mockData';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,7 +11,7 @@ import { Check, PlusCircle, Archive } from "lucide-react";
 import { toast } from "sonner";
 
 const PromptEvolution: React.FC = () => {
-  const [prompts, setPrompts] = useState<PromptContext[]>(mockPromptContexts);
+  const [prompts, setPrompts] = useState<PromptContext[]>([]);
   const [newPrompt, setNewPrompt] = useState<Partial<PromptContext>>({
     prompt: '',
     notes: '',
