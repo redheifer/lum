@@ -43,7 +43,7 @@ const NavBar: React.FC = () => {
           
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/pricing">
+            <Link to="/#pricing">
               <Button variant="ghost" className="flex items-center gap-2">
                 <DollarSign className="h-4 w-4" />
                 Pricing
@@ -82,7 +82,7 @@ const NavBar: React.FC = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white border-b shadow-lg">
           <div className="flex flex-col p-4 space-y-3">
-            <Link to="/pricing" onClick={toggleMenu}>
+            <Link to="/#pricing" onClick={toggleMenu}>
               <Button variant="ghost" className="w-full justify-start">
                 <DollarSign className="h-4 w-4 mr-2" />
                 Pricing
