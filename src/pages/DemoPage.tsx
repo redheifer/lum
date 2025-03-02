@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -85,72 +84,20 @@ const DemoPage = () => {
             </div>
             
             <div className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold mb-6 text-center">Request a Personalized Demo</h2>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <Input 
-                      id="name" 
-                      name="name" 
-                      value={formData.name} 
-                      onChange={handleChange} 
-                      placeholder="Your name" 
-                      required 
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Work Email</Label>
-                    <Input 
-                      id="email" 
-                      name="email" 
-                      type="email" 
-                      value={formData.email} 
-                      onChange={handleChange} 
-                      placeholder="your.email@company.com" 
-                      required 
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="company">Company Name</Label>
-                    <Input 
-                      id="company" 
-                      name="company" 
-                      value={formData.company} 
-                      onChange={handleChange} 
-                      placeholder="Your company" 
-                      required 
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="teamSize">Team Size</Label>
-                    <Input 
-                      id="teamSize" 
-                      name="teamSize" 
-                      value={formData.teamSize} 
-                      onChange={handleChange} 
-                      placeholder="Number of agents" 
-                      required 
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="message">What would you like to learn about?</Label>
-                  <Textarea 
-                    id="message" 
-                    name="message" 
-                    value={formData.message} 
-                    onChange={handleChange} 
-                    placeholder="Tell us about your specific needs and questions" 
-                    rows={4} 
-                  />
-                </div>
-                <div className="pt-2">
-                  <Button type="submit" className="w-full">
-                    Request Demo
-                  </Button>
-                </div>
-              </form>
+              <h2 className="text-2xl font-bold mb-6 text-center">Schedule a Personalized Demo</h2>
+              {/* Google Calendar Appointment Scheduling begin */}
+              <div className="w-full">
+                <iframe 
+                  src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1Fa1-2fAfb8bERkt4ag72-XhVSCulhO4-DlBqD5LVpOs_dNBTtQ7ll0MFpPHD84vw6yWq7jnR2?gv=true" 
+                  style={{ border: 0 }} 
+                  width="100%" 
+                  height="600" 
+                  frameBorder="0"
+                  title="Schedule a demo"
+                  className="w-full"
+                ></iframe>
+              </div>
+              {/* end Google Calendar Appointment Scheduling */}
             </div>
           </div>
         </div>
