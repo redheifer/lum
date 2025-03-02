@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,41 +19,6 @@ const DemoPage = () => {
     teamSize: "",
     message: "",
   });
-
-  const calendarButtonRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Load the Google Calendar scheduling button script
-    const linkElement = document.createElement('link');
-    linkElement.href = 'https://calendar.google.com/calendar/scheduling-button-script.css';
-    linkElement.rel = 'stylesheet';
-    document.head.appendChild(linkElement);
-
-    const scriptElement = document.createElement('script');
-    scriptElement.src = 'https://calendar.google.com/calendar/scheduling-button-script.js';
-    scriptElement.async = true;
-    document.head.appendChild(scriptElement);
-
-    // Initialize the calendar button after scripts have loaded
-    scriptElement.onload = () => {
-      if (calendarButtonRef.current && window.calendar && window.calendar.schedulingButton) {
-        window.calendar.schedulingButton.load({
-          url: 'https://calendar.google.com/calendar/appointments/AcZssZ3e3g22em-l_tIchPRce__GtqeLDy7FL_k-Cdc=?gv=true',
-          color: '#C0CA33',
-          label: "Book a Demo with Lum",
-          target: calendarButtonRef.current,
-        });
-      }
-    };
-
-    // Cleanup function
-    return () => {
-      document.head.removeChild(linkElement);
-      if (scriptElement.parentNode) {
-        document.head.removeChild(scriptElement);
-      }
-    };
-  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -121,8 +86,18 @@ const DemoPage = () => {
             
             <div className="bg-white rounded-xl shadow-lg p-8">
               <h2 className="text-2xl font-bold mb-6 text-center">Book a Demo with Lum</h2>
-              <div className="w-full flex justify-center" ref={calendarButtonRef}>
-                {/* Google Calendar Scheduling Button will be injected here */}
+              <div className="w-full">
+                {/* Google Calendar Appointment Scheduling begin */}
+                <iframe 
+                  src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1Fa1-2fAfb8bERkt4ag72-XhVSCulhO4-DlBqD5LVpOs_dNBTtQ7ll0MFpPHD84vw6yWq7jnR2?gv=true" 
+                  style={{ border: 0 }} 
+                  width="100%" 
+                  height="600" 
+                  frameBorder="0"
+                  title="Book a Demo with Lum"
+                  className="w-full rounded-md"
+                ></iframe>
+                {/* end Google Calendar Appointment Scheduling */}
               </div>
             </div>
           </div>
@@ -131,21 +106,5 @@ const DemoPage = () => {
     </div>
   );
 };
-
-// Add TypeScript interface for the global window object
-declare global {
-  interface Window {
-    calendar?: {
-      schedulingButton: {
-        load: (options: {
-          url: string;
-          color: string;
-          label: string;
-          target: HTMLElement;
-        }) => void;
-      };
-    };
-  }
-}
 
 export default DemoPage;
