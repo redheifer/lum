@@ -8,6 +8,7 @@ import ROICalculator from "@/components/homepage/ROICalculator";
 import PricingSection from "@/components/homepage/PricingSection";
 import TestimonialsSection from "@/components/homepage/TestimonialsSection";
 import CTASection from "@/components/homepage/CTASection";
+import Footer from "@/components/homepage/Footer";
 
 const HomePage = () => {
   return (
@@ -15,26 +16,31 @@ const HomePage = () => {
       {/* Navigation Bar */}
       <NavBar />
       
-      {/* Hero Section */}
-      <HeroSection />
+      <main>
+        {/* Hero Section */}
+        <HeroSection />
+        
+        {/* Key Features Section */}
+        <FeaturesSection />
+        
+        {/* AI vs Human Section */}
+        <ComparisonSection />
+        
+        {/* ROI Calculator Section */}
+        <ROICalculator />
+        
+        {/* Pricing Section */}
+        <PricingSection />
+        
+        {/* Testimonials Section */}
+        <TestimonialsSection />
+        
+        {/* CTA Section */}
+        <CTASection />
+      </main>
       
-      {/* Key Features Section */}
-      <FeaturesSection />
-      
-      {/* AI vs Human Section */}
-      <ComparisonSection />
-      
-      {/* ROI Calculator Section */}
-      <ROICalculator />
-      
-      {/* Pricing Section */}
-      <PricingSection />
-      
-      {/* Testimonials Section */}
-      <TestimonialsSection />
-      
-      {/* CTA Section */}
-      <CTASection />
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
