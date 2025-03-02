@@ -120,7 +120,7 @@ const OnboardingWizard: React.FC<OnboardingWizardProps> = ({ onComplete, initial
       <Card className="border-2 border-primary/20 shadow-lg bg-gradient-to-br from-card to-card/50">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
-            Welcome to Call Campaign Manager
+            Welcome to Lum
           </CardTitle>
           <CardDescription className="text-center text-lg">
             Let's set up your account in a few simple steps

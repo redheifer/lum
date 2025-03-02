@@ -35,7 +35,7 @@ const NavBar: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
-              <span className="font-bold text-xl">Call Evolution Hub</span>
+              <span className="font-bold text-xl">Lum</span>
             </Link>
           </div>
           

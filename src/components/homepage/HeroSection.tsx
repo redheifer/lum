@@ -15,7 +15,7 @@ const HeroSection: React.FC = () => {
             </h1>
             <p className="text-lg md:text-xl mb-8">
               Review 100% of your customer interactions with AI precision.
-              Increase quality, reduce costs, and scale your QA program effortlessly.
+              Increase quality, reduce costs, and scale your QA program effortlessly with Lum.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link to="/signup">

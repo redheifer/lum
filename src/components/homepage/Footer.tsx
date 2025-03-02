@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -16,7 +15,7 @@ const Footer: React.FC = () => {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h3 className="text-xl font-bold mb-4">Call Evolution Hub</h3>
+            <h3 className="text-xl font-bold mb-4">Lum</h3>
             <p className="text-gray-400 mb-4">
               Transforming call quality assurance with AI-powered solutions for modern businesses.
             </p>
@@ -61,7 +60,7 @@ const Footer: React.FC = () => {
             <p className="text-gray-400 mb-2">Have questions? We're here to help.</p>
             <div className="flex items-center space-x-2 text-gray-400 mb-4">
               <Mail className="h-4 w-4" />
-              <span>contact@callevolution.com</span>
+              <span>contact@lum.com</span>
             </div>
             <Link to="/demo">
               <Button className="bg-green-600 hover:bg-green-700 text-white">
@@ -74,7 +73,7 @@ const Footer: React.FC = () => {
         <div className="border-t border-gray-800 pt-6 mt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm mb-4 md:mb-0">
-              &copy; {new Date().getFullYear()} Call Evolution Hub. All rights reserved.
+              &copy; {new Date().getFullYear()} Lum. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors">Privacy Policy</a>

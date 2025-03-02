@@ -11,7 +11,7 @@ const CTASection: React.FC = () => {
           Ready to Transform Your Call Quality Assurance?
         </h2>
         <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
-          Join the hundreds of companies using our platform to improve customer experience while reducing costs.
+          Join the hundreds of companies using Lum to improve customer experience while reducing costs.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/signup">
