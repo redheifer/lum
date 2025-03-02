@@ -113,27 +113,6 @@ const ComparisonSection: React.FC = () => {
             </ul>
           </div>
         </div>
-        
-        <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {comparisonPoints.map((point, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-md p-6">
-              <div className="bg-primary/10 p-3 rounded-full w-fit mb-4">
-                {point.icon}
-              </div>
-              <h4 className="text-lg font-semibold mb-3">{point.title}</h4>
-              <div className="space-y-3">
-                <div className="flex items-start">
-                  <Bot className="h-4 w-4 text-primary mt-1 mr-2" />
-                  <p className="text-sm">{point.ai}</p>
-                </div>
-                <div className="flex items-start">
-                  <User className="h-4 w-4 text-gray-600 mt-1 mr-2" />
-                  <p className="text-sm text-gray-600">{point.human}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
