@@ -1,5 +1,6 @@
 
 import React from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
@@ -17,13 +18,17 @@ const HeroSection: React.FC = () => {
               Increase quality, reduce costs, and scale your QA program effortlessly.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="font-medium">
-                Get Started
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button size="lg" variant="outline" className="bg-white/10 text-white border-white/20">
-                Schedule Demo
-              </Button>
+              <Link to="/signup">
+                <Button size="lg" className="font-medium">
+                  Get Started
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link to="/demo">
+                <Button size="lg" variant="outline" className="bg-white/10 text-white border-white/20">
+                  Schedule Demo
+                </Button>
+              </Link>
             </div>
           </div>
           <div className="lg:w-1/2 lg:pl-10">

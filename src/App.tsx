@@ -12,6 +12,7 @@ import PricingPage from "./pages/PricingPage";
 import DemoPage from "./pages/DemoPage";
 import ProductPage from "./pages/ProductPage";
 import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/demo" element={<DemoPage />} />
             <Route path="/product" element={<ProductPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

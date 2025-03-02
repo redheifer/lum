@@ -14,7 +14,7 @@ const CTASection: React.FC = () => {
           Join the hundreds of companies using our platform to improve customer experience while reducing costs.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/dashboard">
+          <Link to="/signup">
             <Button
               size="lg"
               variant="secondary"
@@ -23,7 +23,7 @@ const CTASection: React.FC = () => {
               Get Started
             </Button>
           </Link>
-          <Link to="/dashboard">
+          <Link to="/demo">
             <Button 
               size="lg" 
               variant="outline" 

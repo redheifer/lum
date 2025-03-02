@@ -10,15 +10,8 @@ import {
   DollarSign, 
   Menu, 
   X,
-  Mail,
   CircleUser
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 const NavBar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -82,7 +75,7 @@ const NavBar: React.FC = () => {
                 Developer Login
               </Button>
             </Link>
-            <Link to="/dashboard">
+            <Link to="/signup">
               <Button className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white">
                 <UserPlus className="h-4 w-4" />
                 Create Free Account
@@ -127,7 +120,7 @@ const NavBar: React.FC = () => {
                 Developer Login
               </Button>
             </Link>
-            <Link to="/dashboard" onClick={toggleMenu}>
+            <Link to="/signup" onClick={toggleMenu}>
               <Button className="w-full justify-start bg-green-600 hover:bg-green-700 text-white">
                 <UserPlus className="h-4 w-4 mr-2" />
                 Create Free Account
