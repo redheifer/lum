@@ -9,6 +9,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import NavBar from "@/components/NavBar";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Info } from "lucide-react";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
 const DemoPage = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -84,22 +85,22 @@ const DemoPage = () => {
               </div>
             </div>
             
-            <div className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold mb-6 text-center">Book a Demo with Lum</h2>
-              <div className="w-full">
-                {/* Google Calendar Appointment Scheduling begin */}
+            <Card className="bg-white rounded-xl shadow-lg overflow-hidden mb-12">
+              <CardHeader className="bg-primary/5 pb-4">
+                <h2 className="text-2xl font-semibold text-center text-primary">Schedule Your Personalized Demo</h2>
+              </CardHeader>
+              <CardContent className="p-0">
                 <iframe 
                   src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1Fa1-2fAfb8bERkt4ag72-XhVSCulhO4-DlBqD5LVpOs_dNBTtQ7ll0MFpPHD84vw6yWq7jnR2?gv=true" 
                   style={{ border: 0 }} 
                   width="100%" 
                   height="600" 
                   frameBorder="0"
-                  title="Book a Demo with Lum"
-                  className="w-full rounded-md"
+                  title="Schedule Demo"
+                  className="w-full"
                 ></iframe>
-                {/* end Google Calendar Appointment Scheduling */}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </main>
