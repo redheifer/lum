@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -84,7 +85,7 @@ const DemoPage = () => {
             </div>
             
             <div className="bg-white rounded-xl shadow-lg p-8">
-              <h2 className="text-2xl font-bold mb-6 text-center">Schedule a Personalized Demo</h2>
+              <h2 className="text-2xl font-bold mb-6 text-center">Book a Demo with Lum</h2>
               {/* Google Calendar Appointment Scheduling begin */}
               <div className="w-full">
                 <iframe 
@@ -93,7 +94,7 @@ const DemoPage = () => {
                   width="100%" 
                   height="600" 
                   frameBorder="0"
-                  title="Schedule a demo"
+                  title="Book a Demo with Lum"
                   className="w-full"
                 ></iframe>
               </div>
