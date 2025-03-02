@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,8 @@ import {
   InfoIcon, 
   DollarSign, 
   Menu, 
-  X
+  X,
+  Lightbulb
 } from "lucide-react";
 
 const NavBar: React.FC = () => {
@@ -31,6 +31,7 @@ const NavBar: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
+              <Lightbulb className="h-5 w-5 text-primary rotate-12" strokeWidth={2.5} />
               <span className="font-bold text-xl">Lum</span>
             </Link>
           </div>
