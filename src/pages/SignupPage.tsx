@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Mail, Lock, User, Building } from "lucide-react";
 import NavBar from "@/components/NavBar";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const SignupPage = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
@@ -38,13 +39,36 @@ const SignupPage = () => {
       return;
     }
 
-    // Mock successful account creation
-    setTimeout(() => {
-      toast.success("Account created successfully!");
-      // Redirect to dashboard
-      navigate("/dashboard");
+    try {
+      // Create a new user in Supabase
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            company_name: formData.companyName
+          }
+        }
+      });
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success("Verification email sent! Please check your inbox.");
+      navigate("/verify-email", { 
+        state: { 
+          email: formData.email 
+        } 
+      });
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create account");
+      console.error("Signup error:", error);
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -55,7 +79,7 @@ const SignupPage = () => {
           <div className="text-center">
             <h1 className="text-3xl font-bold">Create your account</h1>
             <p className="mt-2 text-gray-600">
-              Sign up to get started with Call Evolution Hub
+              Sign up to get started with Lum
             </p>
           </div>
 
