@@ -19,6 +19,11 @@ const NavBar: React.FC = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const handlePricingClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-sm z-50 border-b">
       <div className="container mx-auto px-4">
@@ -43,12 +48,10 @@ const NavBar: React.FC = () => {
           
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/#pricing">
-              <Button variant="ghost" className="flex items-center gap-2">
-                <DollarSign className="h-4 w-4" />
-                Pricing
-              </Button>
-            </Link>
+            <Button variant="ghost" className="flex items-center gap-2" onClick={handlePricingClick}>
+              <DollarSign className="h-4 w-4" />
+              Pricing
+            </Button>
             <Link to="/product">
               <Button variant="ghost" className="flex items-center gap-2">
                 <InfoIcon className="h-4 w-4" />
@@ -82,12 +85,13 @@ const NavBar: React.FC = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white border-b shadow-lg">
           <div className="flex flex-col p-4 space-y-3">
-            <Link to="/#pricing" onClick={toggleMenu}>
-              <Button variant="ghost" className="w-full justify-start">
-                <DollarSign className="h-4 w-4 mr-2" />
-                Pricing
-              </Button>
-            </Link>
+            <Button variant="ghost" className="w-full justify-start" onClick={(e) => {
+              handlePricingClick(e);
+              toggleMenu();
+            }}>
+              <DollarSign className="h-4 w-4 mr-2" />
+              Pricing
+            </Button>
             <Link to="/product" onClick={toggleMenu}>
               <Button variant="ghost" className="w-full justify-start">
                 <InfoIcon className="h-4 w-4 mr-2" />

@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { 
   LogIn, 
@@ -14,9 +14,19 @@ import {
 
 const NavBar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handlePricingClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate('/');
+    // Use setTimeout to ensure navigation completes before scrolling
+    setTimeout(() => {
+      document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   return (
@@ -43,12 +53,10 @@ const NavBar: React.FC = () => {
           
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/#pricing">
-              <Button variant="ghost" className="flex items-center gap-2">
-                <DollarSign className="h-4 w-4" />
-                Pricing
-              </Button>
-            </Link>
+            <Button variant="ghost" className="flex items-center gap-2" onClick={handlePricingClick}>
+              <DollarSign className="h-4 w-4" />
+              Pricing
+            </Button>
             <Link to="/product">
               <Button variant="ghost" className="flex items-center gap-2">
                 <InfoIcon className="h-4 w-4" />
@@ -82,12 +90,13 @@ const NavBar: React.FC = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-white border-b shadow-lg">
           <div className="flex flex-col p-4 space-y-3">
-            <Link to="/#pricing" onClick={toggleMenu}>
-              <Button variant="ghost" className="w-full justify-start">
-                <DollarSign className="h-4 w-4 mr-2" />
-                Pricing
-              </Button>
-            </Link>
+            <Button variant="ghost" className="w-full justify-start" onClick={(e) => {
+              handlePricingClick(e);
+              toggleMenu();
+            }}>
+              <DollarSign className="h-4 w-4 mr-2" />
+              Pricing
+            </Button>
             <Link to="/product" onClick={toggleMenu}>
               <Button variant="ghost" className="w-full justify-start">
                 <InfoIcon className="h-4 w-4 mr-2" />
