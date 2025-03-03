@@ -202,3 +202,68 @@ export async function fetchAllCalls() {
     aiAnalysis: item.description
   })) as Call[];
 }
+
+// New function to send QA data to Supabase
+export async function sendQAData(callData: Omit<Call, 'id' | 'createdAt'>) {
+  // Prepare the data for Supabase format
+  const supabaseData = {
+    inboundcallid: callData.inboundCallId,
+    campaignid: callData.campaignId,
+    campaignname: callData.campaignName,
+    platform: callData.platform,
+    calldate: callData.callDate,
+    callerid: callData.callerId,
+    endcallsource: callData.endCallSource,
+    publisher: callData.publisher,
+    target: callData.target,
+    duration: callData.duration,
+    revenue: callData.revenue,
+    payout: callData.payout,
+    recording: callData.recording,
+    transcript: callData.transcript,
+    rating: callData.qaScore,
+    description: callData.aiAnalysis,
+    disposition: callData.status,
+    createdat: new Date().toISOString()
+  };
+
+  const { data, error } = await supabase
+    .from('calls')
+    .insert([supabaseData])
+    .select();
+  
+  if (error) {
+    console.error('Error sending QA data:', error);
+    return null;
+  }
+  
+  // Return the newly created call data
+  return {
+    id: data[0].id,
+    inboundCallId: data[0].inboundcallid,
+    campaignId: data[0].campaignid,
+    campaignName: data[0].campaignname,
+    platform: data[0].platform,
+    callDate: data[0].calldate,
+    callerId: data[0].callerid,
+    endCallSource: data[0].endcallsource,
+    publisher: data[0].publisher,
+    target: data[0].target,
+    duration: data[0].duration,
+    revenue: data[0].revenue,
+    payout: data[0].payout,
+    recording: data[0].recording,
+    transcript: data[0].transcript,
+    rating: data[0].rating,
+    description: data[0].description,
+    disposition: data[0].disposition,
+    createdAt: data[0].createdat,
+    status: data[0].disposition,
+    customer: data[0].callerid,
+    agent: data[0].target,
+    date: data[0].calldate,
+    tags: [],
+    qaScore: data[0].rating || 0,
+    aiAnalysis: data[0].description
+  } as Call;
+}

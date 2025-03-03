@@ -27,4 +27,6 @@ router.post('/api/webhooks', (req, res) => {
 // Webhook endpoint that receives call data
 router.post('/webhook/:webhookId', handleWebhookRequest);
 
+// Note: QA webhook is now handled by Next.js API route at /api/webhook/qa
+
 export default router; 

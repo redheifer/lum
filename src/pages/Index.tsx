@@ -49,7 +49,7 @@ const QualityByPublisher = ({ data }) => {
                   style={{ width: `${item.score}%` }}
                 ></div>
               </div>
-              <div className="ml-2 text-sm font-medium">{item.score}%</div>
+              <div className="ml-4 text-sm font-medium">{item.score}%</div>
             </div>
           ))}
         </div>
@@ -59,179 +59,158 @@ const QualityByPublisher = ({ data }) => {
 };
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState('campaigns');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
-  const [onboardingComplete, setOnboardingComplete] = useState(true);
-  const { showOnboarding, onboardingState, completeOnboarding, resetAndShowOnboarding } = useOnboarding();
-  
-  // Add state for metrics
   const [metrics, setMetrics] = useState({
-    dailyQAScore: 85,
-    totalCalls: 127,
-    avgCallDuration: '3m 42s',
-    conversionRate: '23%'
+    dailyQAScore: 0,
+    totalCalls: 0,
+    avgCallDuration: '0m 0s',
+    conversionRate: '0%',
+    publisherQuality: []
   });
   
-  // Add state for publisher quality data
-  const [publisherQuality, setPublisherQuality] = useState([
-    { publisher: 'Facebook', score: 87 },
-    { publisher: 'Google', score: 92 },
-    { publisher: 'Instagram', score: 78 },
-    { publisher: 'LinkedIn', score: 94 },
-    { publisher: 'Twitter', score: 81 }
-  ]);
+  const { showOnboarding, setShowOnboarding, onboardingStep, setOnboardingStep } = useOnboarding();
   
+  // Set the active tab on component mount
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        
-        // Check onboarding status
-        const onboardingData = await fetchOnboardingState();
-        setOnboardingComplete(onboardingData.isComplete);
-        
-        // Load campaigns data
-        const campaignsData = await fetchCampaigns();
-        setCampaigns(campaignsData);
-        
-        // Load metrics (mock for now)
-        // In a real app, you would fetch these from your backend
-        // const metricsData = await fetchMetrics();
-        // setMetrics(metricsData);
-      } catch (error) {
-        console.error('Error loading dashboard data:', error);
-        toast.error('Failed to load dashboard data');
-      } finally {
-        setLoading(false);
-      }
-    };
-    
+    setActiveTab('dashboard');
+  }, []);
+
+  // Load campaigns and onboarding state
+  useEffect(() => {
     loadData();
   }, []);
-  
-  const handleCreateCampaign = () => {
-    // Navigate to campaign creation
-    toast.info('Campaign creation coming soon');
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch campaigns
+      const campaignsData = await fetchCampaigns();
+      setCampaigns(campaignsData);
+      
+      // Fetch onboarding state
+      const onboardingState = await fetchOnboardingState();
+      
+      // Check if onboarding is complete
+      if (!onboardingState.isComplete) {
+        setShowOnboarding(true);
+        setOnboardingStep(onboardingState.currentStep);
+      }
+      
+      // Fetch metrics
+      const metricsData = await fetchMetrics();
+      setMetrics(metricsData);
+      
+    } catch (error) {
+      console.error('Error loading data:', error);
+      toast.error('Failed to load dashboard data');
+    } finally {
+      setLoading(false);
+    }
   };
-  
+
+  const handleCreateCampaign = () => {
+    // This would typically open a modal or navigate to a create campaign page
+    toast.info("Campaign creation is coming soon!");
+  };
+
   const handleOnboardingComplete = () => {
-    completeOnboarding();
-    toast.success('Onboarding completed!');
+    setShowOnboarding(false);
+    loadData(); // Reload data after onboarding
   };
 
   return (
-    <div className="flex h-screen bg-background text-foreground overflow-hidden transition-colors duration-300">
-      {/* Sidebar */}
-      <div className="w-64 flex-shrink-0 h-full">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-      </div>
+    <div className="flex h-screen">
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
       
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden relative">
-        {/* Filter Panel - Slides in from left */}
-        {showFilters && (
-          <FilterPanel onClose={() => setShowFilters(false)} />
-        )}
-        
-        {/* Header */}
-        <div className="py-4 px-6 bg-card border-b flex justify-between items-center">
-          <h1 className="text-2xl font-semibold">Campaign Dashboard</h1>
-          <div className="flex gap-2 items-center">
-            <ThemeToggle />
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setShowFilters(!showFilters)}
-              className="transition-all hover:shadow-sm"
-            >
-              <Filter className="mr-1 h-4 w-4" />
-              Filters
-            </Button>
-            <Button 
-              size="sm" 
-              onClick={handleCreateCampaign}
-              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary transition-all hover:shadow-md"
-            >
-              <Plus className="mr-1 h-4 w-4" />
-              New Campaign
-            </Button>
-            <Button 
-              onClick={resetAndShowOnboarding}
-              className="bg-amber-500 hover:bg-amber-600 text-white"
-            >
-              <LightbulbIcon className="w-4 h-4 mr-2" />
-              Setup Wizard
-            </Button>
+      <div className="flex-1 overflow-auto">
+        <div className="py-4 px-6 bg-card border-b">
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-semibold">Campaign Dashboard</h1>
+            <div className="flex gap-2 items-center">
+              <ThemeToggle />
+              <Button variant="outline" size="sm" onClick={() => setShowFilters(!showFilters)}>
+                <Filter className="mr-1 h-4 w-4" />
+                Filters
+              </Button>
+              <Button size="sm" onClick={handleCreateCampaign}>
+                <Plus className="mr-1 h-4 w-4" />
+                New Campaign
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setShowOnboarding(true)}>
+                <LightbulbIcon className="mr-1 h-4 w-4" />
+                Setup Wizard
+              </Button>
+            </div>
           </div>
+          
+          {showFilters && <FilterPanel />}
         </div>
         
-        {/* Main Content Area */}
-        <div className="flex-1 overflow-auto p-6 bg-background transition-colors duration-300">
+        <div className="p-6">
+          <h2 className="text-xl font-semibold mb-4">Overview</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <MetricCard 
+              title="Daily QA Score" 
+              value={`${metrics.dailyQAScore}%`}
+              description="Average quality score today"
+              icon={<BarChart3 className="h-4 w-4 text-muted-foreground" />}
+            />
+            <MetricCard 
+              title="Total Calls" 
+              value={metrics.totalCalls}
+              description="Processed in the last 24 hours"
+              icon={<Phone className="h-4 w-4 text-muted-foreground" />}
+            />
+            <MetricCard 
+              title="Avg Call Duration" 
+              value={metrics.avgCallDuration}
+              description="Across all campaigns"
+              icon={<BarChart3 className="h-4 w-4 text-muted-foreground" />}
+            />
+            <MetricCard 
+              title="Conversion Rate" 
+              value={metrics.conversionRate}
+              description="Based on call outcomes"
+              icon={<Users className="h-4 w-4 text-muted-foreground" />}
+            />
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+            <QualityByPublisher data={metrics.publisherQuality || []} />
+            
+            {/* Additional dashboard widgets would go here */}
+          </div>
+          
+          <h2 className="text-xl font-semibold mb-4">Your Campaigns</h2>
+          
           {loading ? (
-            <div className="flex items-center justify-center h-full">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
-          ) : showOnboarding ? (
-            <OnboardingWizard 
-              onComplete={handleOnboardingComplete} 
-              initialState={onboardingState}
+          ) : campaigns.length === 0 ? (
+            <EmptyState 
+              title="No campaigns yet"
+              description="Create your first campaign to start tracking calls and quality scores."
+              buttonText="Create Campaign"
+              buttonAction={handleCreateCampaign}
             />
           ) : (
-            <div className="space-y-6">
-              {/* Dashboard Metrics */}
-              <h2 className="text-xl font-semibold mb-4">Overview</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <MetricCard 
-                  title="Daily QA Score" 
-                  value={`${metrics.dailyQAScore}%`} 
-                  description="Average quality score today"
-                  icon={<BarChart3 className="h-4 w-4 text-muted-foreground" />}
-                />
-                <MetricCard 
-                  title="Total Calls" 
-                  value={metrics.totalCalls} 
-                  description="Processed in the last 24 hours"
-                  icon={<Phone className="h-4 w-4 text-muted-foreground" />}
-                />
-                <MetricCard 
-                  title="Avg Call Duration" 
-                  value={metrics.avgCallDuration} 
-                  description="Across all campaigns"
-                  icon={<BarChart3 className="h-4 w-4 text-muted-foreground" />}
-                />
-                <MetricCard 
-                  title="Conversion Rate" 
-                  value={metrics.conversionRate} 
-                  description="Based on call outcomes"
-                  icon={<Users className="h-4 w-4 text-muted-foreground" />}
-                />
-              </div>
-              
-              {/* Quality by Publisher Chart */}
-              <div className="mt-8">
-                <QualityByPublisher data={publisherQuality} />
-              </div>
-              
-              {/* Campaigns List */}
-              <div className="mt-8">
-                <h2 className="text-xl font-semibold mb-4">Your Campaigns</h2>
-                {campaigns.length === 0 ? (
-                  <EmptyState 
-                    title="No Campaigns Found"
-                    description="Get started by creating your first campaign to track calls and performance."
-                    actionLabel="Create Campaign"
-                    onAction={handleCreateCampaign}
-                  />
-                ) : (
-                  <CampaignsList campaigns={campaigns} />
-                )}
-              </div>
-            </div>
+            <CampaignsList campaigns={campaigns} />
           )}
         </div>
       </div>
+      
+      {showOnboarding && (
+        <OnboardingWizard 
+          currentStep={onboardingStep} 
+          onComplete={handleOnboardingComplete}
+        />
+      )}
     </div>
   );
 };
