@@ -1,0 +1,35 @@
+feat: Implement Real-time QA Dashboard and Webhook Testing
+
+This comprehensive update enhances the call monitoring system with several key improvements:
+
+## UI Components
+- Created DateRangePicker component with calendar integration
+- Built RealTimeQA dashboard replacing the basic Calls view
+- Fixed calendar component props and popover functionality
+
+## Navigation & Routing
+- Updated sidebar navigation to prioritize Real-time QA
+- Added "Soon" badges to upcoming features (Campaigns & Reports)
+- Fixed route configuration in App.tsx
+- Improved navigation between dashboard sections
+
+## Admin & Webhook Functionality
+- Added WebhooksTesting admin component for testing API integrations
+- Created webhook inbound endpoint for receiving call data
+- Implemented Airtable to Supabase migration script
+- Added workspace-specific webhook support
+
+## UX Improvements
+- Enhanced call status visualization with color-coded badges
+- Added QA score progress bars for quick assessment
+- Improved filtering and search capabilities
+- Removed "Send Test Email" button from verification page
+
+## Bug Fixes
+- Fixed import paths for WebhookTesting component
+- Resolved navigation and routing issues
+- Added loading states and error handling
+- Fixed sidebar active tab highlighting
+
+This update significantly improves the real-time monitoring capabilities
+while providing admin tools to test integrations with external systems.
