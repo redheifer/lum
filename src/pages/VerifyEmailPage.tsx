@@ -1,19 +1,24 @@
-
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Mail, CheckCircle } from "lucide-react";
-import NavBar from "@/components/NavBar";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Mail } from 'lucide-react';
+import NavBar from '@/components/NavBar';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const VerifyEmailPage: React.FC = () => {
-  const location = useLocation();
-  const email = location.state?.email || "your email";
+  const [isResending, setIsResending] = useState(false);
+  const email = new URLSearchParams(window.location.search).get('email') || '';
 
   const handleResendEmail = async () => {
+    if (!email) {
+      toast.error('No email address found');
+      return;
+    }
+
     try {
+      setIsResending(true);
       const { error } = await supabase.auth.resend({
         type: 'signup',
         email,
@@ -23,10 +28,12 @@ const VerifyEmailPage: React.FC = () => {
         throw error;
       }
 
-      toast.success("Verification email resent successfully!");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to resend verification email");
-      console.error("Resend verification error:", error);
+      toast.success('Verification email resent successfully');
+    } catch (error) {
+      console.error('Error resending verification email:', error);
+      toast.error('Failed to resend verification email');
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -47,7 +54,18 @@ const VerifyEmailPage: React.FC = () => {
           <CardContent className="space-y-4">
             <div className="bg-blue-50 p-4 rounded-lg">
               <div className="flex items-start">
-                <CheckCircle className="h-5 w-5 text-blue-500 mt-0.5 mr-2" />
+                <svg
+                  className="h-5 w-5 text-blue-500 mr-2"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
                 <div>
                   <p className="text-sm text-blue-800">
                     Please check your email inbox and click the verification link to activate your account.
@@ -64,8 +82,9 @@ const VerifyEmailPage: React.FC = () => {
               onClick={handleResendEmail} 
               variant="outline" 
               className="w-full"
+              disabled={isResending}
             >
-              Resend verification email
+              {isResending ? 'Sending...' : 'Resend verification email'}
             </Button>
             <div className="text-center text-sm">
               <span className="text-gray-600">Back to </span>

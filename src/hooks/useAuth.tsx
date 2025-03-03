@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -50,7 +49,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [navigate]);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      // Only clear auth-related items from storage instead of everything
+      // Supabase typically stores auth in 'supabase.auth.token' and similar keys
+      localStorage.removeItem('supabase.auth.token');
+      sessionStorage.removeItem('supabase.auth.token');
+      
+      // Remove any other app-specific auth data
+      localStorage.removeItem('user');
+      localStorage.removeItem('session');
+      
+      // Only clear authentication-related cookies
+      // These are typically set by Supabase auth
+      const authCookies = ['sb-access-token', 'sb-refresh-token', 'sb-auth-token'];
+      authCookies.forEach(cookieName => {
+        document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      });
+      
+      // Sign out from Supabase
+      await supabase.auth.signOut();
+      
+      // Force redirect to login page
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
   };
 
   return (

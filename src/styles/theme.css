@@ -1,0 +1,67 @@
+:root {
+  /* Primary colors - warm yellows and oranges */
+  --lum-amber-50: #fffbeb;
+  --lum-amber-100: #fef3c7;
+  --lum-amber-200: #fde68a;
+  --lum-amber-300: #fcd34d;
+  --lum-amber-400: #fbbf24;
+  --lum-amber-500: #f59e0b; /* Primary brand color */
+  --lum-amber-600: #d97706;
+  --lum-amber-700: #b45309;
+  
+  /* Secondary colors - blues for contrast */
+  --lum-blue-50: #eff6ff;
+  --lum-blue-100: #dbeafe;
+  --lum-blue-200: #bfdbfe;
+  --lum-blue-300: #93c5fd;
+  --lum-blue-400: #60a5fa;
+  --lum-blue-500: #3b82f6;
+  --lum-blue-600: #2563eb;
+  
+  /* Neutrals */
+  --lum-gray-50: #f9fafb;
+  --lum-gray-100: #f3f4f6;
+  --lum-gray-200: #e5e7eb;
+  --lum-gray-300: #d1d5db;
+  --lum-gray-400: #9ca3af;
+  --lum-gray-500: #6b7280;
+  --lum-gray-600: #4b5563;
+  --lum-gray-700: #374151;
+  --lum-gray-800: #1f2937;
+  --lum-gray-900: #111827;
+  
+  /* Semantic colors */
+  --lum-success: #10b981;
+  --lum-warning: #f59e0b;
+  --lum-error: #ef4444;
+  --lum-info: #3b82f6;
+  
+  /* UI elements */
+  --lum-background: #ffffff;
+  --lum-card-bg: #ffffff;
+  --lum-sidebar-bg: #fffbeb;
+  --lum-header-bg: #ffffff;
+  
+  /* Typography */
+  --lum-font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* Shadows */
+  --lum-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --lum-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --lum-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --lum-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  
+  /* Border radius */
+  --lum-radius-sm: 0.25rem;
+  --lum-radius: 0.375rem;
+  --lum-radius-md: 0.5rem;
+  --lum-radius-lg: 0.75rem;
+  --lum-radius-xl: 1rem;
+}
+
+.dark {
+  --lum-background: #111827;
+  --lum-card-bg: #1f2937;
+  --lum-sidebar-bg: #1f2937;
+  --lum-header-bg: #1f2937;
+} 

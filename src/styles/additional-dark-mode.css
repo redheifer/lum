@@ -1,0 +1,48 @@
+/* Add these styles to your global CSS or create a new file */
+
+/* Dark mode refinements */
+.dark .campaign-card {
+  background-color: hsl(var(--card));
+  border-color: hsl(var(--border));
+}
+
+.dark .sidebar-nav-button {
+  color: hsl(var(--foreground));
+}
+
+.dark .sidebar-nav-button:hover {
+  background-color: hsl(var(--muted));
+}
+
+.dark .sidebar-nav-button.active {
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
+/* Fix any input field contrast issues */
+.dark input, 
+.dark select, 
+.dark textarea {
+  background-color: hsl(var(--input));
+  border-color: hsl(var(--border));
+  color: hsl(var(--foreground));
+}
+
+/* Improve button contrast in dark mode */
+.dark .button-primary {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+/* Fix table styling */
+.dark table {
+  border-color: hsl(var(--border));
+}
+
+.dark th {
+  background-color: hsl(var(--muted));
+}
+
+.dark tr:hover td {
+  background-color: hsl(var(--accent));
+} 

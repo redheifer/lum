@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Campaign, Call, OnboardingState } from "./types";
 
@@ -137,4 +136,69 @@ export async function createCampaign(campaign: Omit<Campaign, 'id' | 'createdAt'
     status: data[0].status,
     createdAt: data[0].createdat
   } as Campaign;
+}
+
+export async function fetchMetrics() {
+  try {
+    // In a real app, this would be a Supabase call
+    // For now, we're mocking the data
+    return {
+      dailyQAScore: 85,
+      totalCalls: 127,
+      avgCallDuration: '3m 42s',
+      conversionRate: '23%',
+      publisherQuality: [
+        { publisher: 'Facebook', score: 87 },
+        { publisher: 'Google', score: 92 },
+        { publisher: 'Instagram', score: 78 },
+        { publisher: 'LinkedIn', score: 94 },
+        { publisher: 'Twitter', score: 81 }
+      ]
+    };
+  } catch (error) {
+    console.error('Error fetching metrics:', error);
+    throw error;
+  }
+}
+
+export async function fetchAllCalls() {
+  const { data, error } = await supabase
+    .from('calls')
+    .select('*')
+    .order('calldate', { ascending: false });
+  
+  if (error) {
+    console.error('Error fetching calls:', error);
+    return [];
+  }
+  
+  // Map database field names to our interface
+  return data.map(item => ({
+    id: item.id,
+    inboundCallId: item.inboundcallid,
+    campaignId: item.campaignid,
+    campaignName: item.campaignname,
+    platform: item.platform,
+    callDate: item.calldate,
+    callerId: item.callerid,
+    endCallSource: item.endcallsource,
+    publisher: item.publisher,
+    target: item.target,
+    duration: item.duration,
+    revenue: item.revenue,
+    payout: item.payout,
+    recording: item.recording,
+    transcript: item.transcript,
+    rating: item.rating,
+    description: item.description,
+    disposition: item.disposition,
+    createdAt: item.createdat,
+    status: item.disposition,
+    customer: item.callerid,
+    agent: item.target,
+    date: item.calldate,
+    tags: [],
+    qaScore: item.rating || 0,
+    aiAnalysis: item.description
+  })) as Call[];
 }
